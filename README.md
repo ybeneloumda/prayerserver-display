@@ -47,10 +47,10 @@ npm start
 
 4. **Access the app**
 
-Open your browser and go to:
+Open your browser and go to :
 
 ```
-http://localhost:3000
+http://hostname:port
 ```
 
 ---
