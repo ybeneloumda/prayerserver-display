@@ -1,0 +1,608 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<!--
+README:
+ - This single file implements a self‑contained prayer times display board for mosques that works fully offline (no external network calls).
+ - An **Admin** button in the top‑right opens a settings panel. You can also press **Ctrl+Shift+A** to toggle it or press **Esc** to close it.
+ - In the settings panel you can change the mosque name, location label, select auto or manual location (with latitude/longitude/timezone), choose the prayer calculation method and Asr juristic school, set global or per‑prayer iqamah delays, adjust the Hijri date offset, set the language (English/Arabic) and time format (24h/12h), provide announcements ticker text, upload a local logo and background image, and tweak layout (card size, gap, header alignment, board alignment, and whether to display a Sunrise card).
+ - A **Quick Preset** button pre‑fills the form with Deltebre, Spain (lat 40.7196, lng 0.7082, zone Europe/Madrid, MWL, Asr standard) so you can quickly test against known values.
+ - Settings persist across sessions via `localStorage`. Use the Reset button to restore factory defaults.
+ - Geolocation is used in Auto mode; if the browser denies geolocation, the app falls back to Manual mode and shows a subtle warning. Daylight saving time is handled using the selected IANA time zone; if the zone is unsupported by the runtime, an EU‑style fallback rule is used.
+ - Hotkeys:
+   * `Ctrl+Shift+A`: open/close settings panel
+   * `Esc`: close settings panel without saving
+ - The board highlights the next prayer or iqamah time, provides a live countdown to the next event, and recomputes prayer times at midnight. The optional Sunrise card (hidden by default) can be enabled in settings.
+-->
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mosque Prayer Times Display</title>
+<link href="css/style.css"  rel="stylesheet">
+</head>
+<body>
+<div id="background-image"></div>
+<div class="app-container">
+  <!-- Skip to content link for accessibility -->
+  
+  <!-- Settings toggle button -->
+  <button id="settings-toggle" aria-label="Toggle settings" title="Toggle settings">
+    ⚙️
+  </button>
+  
+  <!-- Qibla Direction Indicator (positioned above settings controls) -->
+  <div id="qibla-indicator" class="qibla-indicator" style="display:none" title="Qibla Direction">
+    <div class="qibla-arrow"></div>
+  </div>
+  
+  <!-- Settings controls container (groups theme, font, and share buttons) -->
+  <div id="settings-controls" class="settings-controls">
+    <button id="theme-toggle" aria-label="Toggle theme" title="Toggle theme">
+      🌙
+    </button>
+    <div id="font-controls" aria-label="Font size controls">
+      <button id="font-decrease" aria-label="Decrease font size" title="Decrease font size">A-</button>
+      <button id="font-reset" aria-label="Reset font size" title="Reset font size">A</button>
+      <button id="font-increase" aria-label="Increase font size" title="Increase font size">A+</button>
+    </div>
+    <button id="share-btn" aria-label="Share prayer times" title="Share prayer times">��</button>
+  </div>
+  
+  <header>
+    <div class="header-left">
+      <div id="mosque-name"></div>
+      <div id="date-line"></div>
+    </div>
+    <!--
+      The logo will be injected dynamically by render() and inserted between
+      header-left and header-right. Do not place any other elements here.
+    -->
+    <div class="header-right">
+      <div id="digital-clock">--:--:--</div>
+      <div id="location-label"></div>
+      <!-- Weather display: shows manual weather information when enabled in settings -->
+<div id="weather-display" style="display:none">
+  <div class="weather-current"></div>
+  <div class="weather-forecast" style="display:none"></div>
+  <div class="weather-alerts" style="display:none"></div>
+</div>
+      <button id="admin-btn" aria-label="Open settings">Admin</button>
+    </div>
+  </header>
+  <!-- Schedule container: used for weekly or monthly views. Contains a scrollable
+       table populated by JavaScript when viewMode is 'week' or 'month'. -->
+  <div id="schedule-container" class="schedule-container">
+    <table id="schedule-table" class="schedule-table"></table>
+  </div>
+  <div id="cards-container"></div>
+  <!-- Slideshow area for phrases configured by the administrator. This appears prominently
+       between the prayer cards and footer and cycles through provided phrases. -->
+  <div id="slideshow"></div>
+  <footer>
+    <div id="ticker"></div>
+    <div id="next-event"></div>
+  </footer>
+  <!-- Geolocation warning message -->
+  <div id="geo-warning" style="position:absolute;top:0;left:50%;transform:translateX(-50%);background:rgba(255,255,255,0.1);color:#ffcc00;padding:0.5rem 1rem;border-radius:0 0 0.5rem 0.5rem;font-size:0.9rem;display:none;z-index:5;">
+    <!-- Warning text will be inserted via script -->
+  </div>
+</div>
+
+<!-- Admin panel -->
+<div id="admin-panel">
+  <form id="admin-form">
+    <h2>Settings</h2>
+    <!--
+      Grouped settings below mirror the detailed description. Each section is
+      separated by an <h3> heading and includes related controls. If you add
+      new settings, place them in the appropriate section.
+    -->
+    <h3>Server side configuration</h3>
+    <div class="admin-row">
+      <label>
+        Secured connection ?
+        <select id="admin-server-secured">
+          <option value="https" selected>Yes</option>
+          <option value="http">No</option>
+        </select>
+
+      </label>
+      <label>
+        Server IP/Hostname Config (Keep default if not changed)
+        <input type="text" id="admin-server-ip" value="prayerserver">
+      </label>
+      <label>
+        Server Port Config (Keep default if not changed)
+        <input type="text" id="admin-server-port" value="80">
+      </label>
+    </div>
+
+
+    <h3>Header &amp; Identity</h3>
+    <div class="admin-row">
+      <label>
+        Mosque Name
+        <input type="text" id="admin-mosque-name">
+      </label>
+      <label>
+        Location Label
+        <input type="text" id="admin-location-label">
+      </label>
+    </div>
+    <div class="admin-row">
+      <label>
+        Logo Image
+        <input type="file" id="admin-logo" accept="image/*">
+      </label>
+      <label>
+        Background Image
+        <input type="file" id="admin-bg" accept="image/*">
+      </label>
+    </div>
+
+    <!-- Location & Timezone -->
+    <h3>Location &amp; Timezone</h3>
+    <div class="admin-row">
+      <label>
+        Location Mode
+        <select id="admin-mode">
+          <option value="auto">Auto</option>
+          <option value="manual">Manual</option>
+        </select>
+      </label>
+      <label>
+        Latitude
+        <input type="number" step="0.0001" id="admin-lat">
+      </label>
+      <label>
+        Longitude
+        <input type="number" step="0.0001" id="admin-lng">
+      </label>
+      <label>
+        Timezone (IANA)
+        <input type="text" id="admin-tz">
+      </label>
+    </div>
+
+    <!-- Calculation Settings -->
+    <h3>Calculation Settings</h3>
+    <div class="admin-row">
+      <label>
+        Calculation Method
+        <select id="admin-method">
+          <option value="MWL">MWL</option>
+          <option value="ISNA">ISNA</option>
+          <option value="Egypt">Egypt</option>
+          <option value="Makkah">Makkah</option>
+          <option value="Karachi">Karachi</option>
+          <option value="Tehran">Tehran</option>
+          <option value="Jafari">Jafari</option>
+          <option value="France">France</option>
+          <option value="Russia">Russia</option>
+          <option value="Singapore">Singapore</option>
+        </select>
+      </label>
+      <label>
+        Asr Method
+        <select id="admin-asr">
+          <option value="Standard">Standard</option>
+          <option value="Hanafi">Hanafi</option>
+        </select>
+      </label>
+    </div>
+
+    <!-- Iqamah Settings -->
+    <h3>Iqamah Settings</h3>
+    <div class="admin-row">
+      <label>
+        Global Iqamah Delay (minutes)
+        <input type="number" min="0" id="admin-global-iqamah">
+      </label>
+      <label>
+        Per-Prayer Iqamah (comma separated HH:MM or blank)
+        <textarea id="admin-per-iqamah" placeholder="Fajr, Dhuhr, Asr, Maghrib, Isha"></textarea>
+      </label>
+    </div>
+    <div class="admin-row">
+      <label>
+        Flash Minutes Before Iqamah
+        <input type="number" min="0" id="admin-flash-minutes">
+      </label>
+    </div>
+
+    <!-- Friday Mode -->
+    <h3>Friday Mode</h3>
+    <div class="admin-row">
+      <label style="display:flex;align-items:center;">
+        <input type="checkbox" id="admin-friday-mode" style="margin-right:0.5rem;"> Enable Friday Mode
+      </label>
+      <label>
+        Khutbah Delay (min)
+        <input type="number" step="1" id="admin-jumuah-khutbah" />
+      </label>
+      <label>
+        Prayer Delay (min)
+        <input type="number" step="1" id="admin-jumuah-prayer" />
+      </label>
+    </div>
+
+    <!-- Ramadan Mode -->
+    <h3>Ramadan Mode</h3>
+    <div class="admin-row">
+      <label style="display:flex;align-items:center;">
+        <input type="checkbox" id="admin-ramadan-mode" style="margin-right:0.5rem;"> Enable Ramadan Mode
+      </label>
+      <label>
+        Imsak Offset (min)
+        <input type="number" step="1" id="admin-imsak-offset" />
+      </label>
+      <label style="display:flex;align-items:center;">
+        <input type="checkbox" id="admin-show-iftar" style="margin-right:0.5rem;"> Show Iftar Countdown
+      </label>
+    </div>
+
+    <!-- Language & Date -->
+    <h3>Language &amp; Date</h3>
+    <div class="admin-row">
+      <label>
+        Language
+        <select id="admin-lang">
+          <option value="en">English</option>
+          <option value="ar">Arabic</option>
+          <option value="es">Spanish</option>
+        </select>
+      </label>
+      <label>
+        Admin Panel Language
+        <select id="admin-panel-lang">
+          <option value="en">English</option>
+          <option value="es">Spanish</option>
+        </select>
+      </label>
+      <label>
+        Time Format
+        <select id="admin-format">
+          <option value="24h">24h</option>
+          <option value="12h">12h</option>
+          <option value="12H">12h (no am/pm)</option>
+        </select>
+      </label>
+      <label>
+        Hijri Offset
+        <input type="number" min="-3" max="3" id="admin-hijri-offset">
+      </label>
+    </div>
+
+    <!-- Ticker & Slideshow -->
+    <h3>Ticker &amp; Slideshow</h3>
+    <div class="admin-row">
+      <label>
+        Announcements Ticker
+        <textarea id="admin-ticker"></textarea>
+      </label>
+                      <label style="display:flex;align-items:center;">
+                  <input type="checkbox" id="admin-ticker-rtl" style="margin-right:0.5rem;"> Force RTL Direction (Right-to-Left)
+                </label>
+                <label>
+                  Ticker Font Size (rem):
+                  <input type="number" id="admin-ticker-size" min="0.5" max="3" step="0.1" style="width:100px;">
+                </label>
+                <label>
+                  Footer Height (rem):
+                  <input type="number" id="admin-footer-height" min="2" max="6" step="0.1" style="width:100px;">
+                </label>
+      <label>
+        Manual Phrases (one per line)
+        <textarea id="admin-slideshow" placeholder="Enter phrases each on its own line"></textarea>
+      </label>
+    </div>
+    <!-- Slideshow source selection and options -->
+    <div class="admin-row">
+      <label>
+        Slideshow Source
+        <select id="admin-slideshow-source">
+          <option value="manual">Manual</option>
+          <option value="quranRandom">Quran.com Random Verse</option>
+          <option value="quranSeq">AlQuran.cloud Verse</option>
+          <option value="azkar">Azkar (muslimKit)</option>
+          <option value="custom">Custom API</option>
+        </select>
+      </label>
+      <label class="slideshow-translation-row" style="display:none;">
+        Translation (ID/Edition)
+        <input type="text" id="admin-slideshow-translation" placeholder="e.g., 131 or en.pickthall">
+      </label>
+      <label class="slideshow-url-row" style="display:none;">
+        Custom API URL
+        <input type="text" id="admin-slideshow-url" placeholder="https://example.com/api">
+      </label>
+    </div>
+    <div class="admin-row">
+      <label class="slideshow-refresh-row" style="display:none;">
+        Refresh Interval (hours)
+        <input type="number" min="1" step="1" id="admin-slideshow-refresh">
+      </label>
+      <label class="slideshow-duration-row" style="display:none;">
+        Slide Duration (sec)
+        <input type="number" min="2" step="1" id="admin-slideshow-duration">
+      </label>
+      <label class="slideshow-fallback-row" style="display:none; align-items:center;">
+        <input type="checkbox" id="admin-slideshow-fallback" style="margin-right:0.5rem;"> Fallback to Manual
+      </label>
+    </div>
+    <div class="admin-row">
+      <label>
+        Slideshow Top Margin (px)
+        <input type="number" min="0" step="1" id="admin-slideshow-top" />
+      </label>
+      <label>
+        Slideshow Bottom Margin (px)
+        <input type="number" min="0" step="1" id="admin-slideshow-bottom" />
+      </label>
+      <label>
+        Slideshow Vertical Align
+        <select id="admin-slideshow-align">
+          <option value="flex-start">Top</option>
+          <option value="center">Center</option>
+          <option value="flex-end">Bottom</option>
+        </select>
+      </label>
+    </div>
+
+    <!-- Weather -->
+    <h3>Weather</h3>
+    <div class="admin-row">
+      <label>
+        Weather Mode
+        <select id="admin-weather-mode">
+          <option value="manual">Manual</option>
+          <option value="online">Online</option>
+        </select>
+      </label>
+      <label style="display:flex;align-items:center;">
+        <input type="checkbox" id="admin-weather-enabled" style="margin-right:0.5rem;"> Enable Weather
+      </label>
+    </div>
+    <div class="admin-row weather-manual-row">
+      <label>
+        Temperature
+        <input type="number" step="0.1" id="admin-weather-temp">
+      </label>
+      <label>
+        Units
+        <select id="admin-weather-units">
+          <option value="C">°C</option>
+          <option value="F">°F</option>
+        </select>
+      </label>
+      <label>
+        Condition
+        <input type="text" id="admin-weather-condition">
+      </label>
+    </div>
+    <div class="admin-row weather-manual-row">
+      <label>
+        High
+        <input type="number" step="0.1" id="admin-weather-high">
+      </label>
+      <label>
+        Low
+        <input type="number" step="0.1" id="admin-weather-low">
+      </label>
+      <label>
+        Humidity
+        <input type="text" id="admin-weather-humidity">
+      </label>
+      <label>
+        Wind
+        <input type="text" id="admin-weather-wind">
+      </label>
+    </div>
+    <div class="admin-row weather-manual-row">
+      <label>
+        Validity (hours)
+        <input type="number" min="0" step="0.1" id="admin-weather-valid">
+      </label>
+      <label>
+        Weather Icon
+        <input type="file" id="admin-weather-icon" accept="image/*">
+      </label>
+    </div>
+    <div class="admin-row weather-online-row" style="display:none;">
+      <label>
+        Weather API Key
+        <input type="text" id="admin-weather-api-key" placeholder="Enter API key">
+      </label>
+    </div>
+    <div class="admin-row">
+      <label>
+        Weather Provider
+        <select id="admin-weather-provider">
+          <option value="open-meteo">Open Meteo (no key)</option>
+          <option value="openweather">OpenWeatherMap</option>
+        </select>
+      </label>
+    </div>
+    
+    <!-- Enhanced Weather Features -->
+    <div class="admin-row">
+      <div class="admin-col">
+        <input type="checkbox" id="admin-weather-forecast" style="margin-right:0.5rem;"> Show 5-Day Forecast
+      </div>
+      <div class="admin-col">
+        <input type="checkbox" id="admin-weather-air-quality" style="margin-right:0.5rem;"> Show Air Quality
+      </div>
+    </div>
+    <div class="admin-row">
+      <div class="admin-col">
+        <input type="checkbox" id="admin-weather-alerts" style="margin-right:0.5rem;"> Show Weather Alerts
+      </div>
+      <div class="admin-col">
+        <input type="checkbox" id="admin-weather-fallbacks" style="margin-right:0.5rem;"> Enable API Fallbacks
+      </div>
+    </div>
+
+    <!-- Prayer Time Enhancements -->
+    <h3>Prayer Time Enhancements</h3>
+    <div class="admin-row">
+      <div class="admin-col">
+        <input type="checkbox" id="admin-prayer-notifications" style="margin-right:0.5rem;"> Enable Prayer Notifications
+      </div>
+      <div class="admin-col">
+        <input type="checkbox" id="admin-qibla-direction" style="margin-right:0.5rem;"> Show Qibla Direction
+      </div>
+    </div>
+    <div class="admin-row">
+      <div class="admin-col">
+        <input type="checkbox" id="admin-prayer-sharing" style="margin-right:0.5rem;"> Enable Prayer Time Sharing
+      </div>
+    </div>
+    <div class="admin-row">
+      <label>Prayer Time Offsets (minutes, comma separated)</label>
+      <input type="text" id="admin-prayer-offsets" placeholder="Fajr,Dhuhr,Asr,Maghrib,Isha">
+    </div>
+
+    <!-- Layout & Display -->
+    <h3>Layout &amp; Display</h3>
+    <div class="admin-row">
+      <label>
+        Card Height (px)
+        <input type="number" min="50" id="admin-card-height">
+      </label>
+      <label>
+        Card Max Width (px)
+        <input type="number" min="100" id="admin-card-max-width">
+      </label>
+      <label>
+        Grid Gap (px)
+        <input type="number" min="0" id="admin-gap">
+      </label>
+    </div>
+    <div class="admin-row">
+      <label>
+        Header Alignment
+        <select id="admin-header-align">
+          <option value="space-between">Spread</option>
+          <option value="start">Left</option>
+          <option value="center">Center</option>
+          <option value="end">Right</option>
+        </select>
+      </label>
+      <label>
+        Board Alignment
+        <select id="admin-board-align">
+          <option value="start">Start</option>
+          <option value="center">Center</option>
+        </select>
+      </label>
+      <label style="display:flex;align-items:center;">
+        <input type="checkbox" id="admin-show-sunrise" style="margin-right:0.5rem;"> Show Sunrise
+      </label>
+      <label>
+        View Mode
+        <select id="admin-view-mode">
+          <option value="day">Daily</option>
+          <option value="week">Weekly</option>
+          <option value="month">Monthly</option>
+        </select>
+      </label>
+    </div>
+
+    <!-- Typography Settings -->
+    <h3>Typography Settings</h3>
+    <div class="admin-row">
+      <label>
+        Font Family
+        <input type="text" id="admin-font-family" placeholder="e.g., 'Segoe UI', Arial, sans-serif">
+      </label>
+      <label>
+        Clock Size (rem)
+        <input type="number" min="0.1" step="0.1" id="admin-clock-size">
+      </label>
+      <label>
+        Next Event Size (rem)
+        <input type="number" min="0.1" step="0.1" id="admin-next-size">
+      </label>
+      <label>
+        Slideshow Font Size (rem)
+        <input type="number" min="0.1" step="0.1" id="admin-slideshow-size">
+      </label>
+    </div>
+    <div class="admin-row">
+      <label>
+        Card Name Scale
+        <input type="number" min="0.05" step="0.01" id="admin-card-name-scale">
+      </label>
+      <label>
+        Card Time Scale
+        <input type="number" min="0.05" step="0.01" id="admin-card-time-scale">
+      </label>
+      <label>
+        Card Iqamah Scale
+        <input type="number" min="0.05" step="0.01" id="admin-card-iqamah-scale">
+      </label>
+      <label>
+        Logo Height (rem)
+        <input type="number" min="1" step="0.1" id="admin-logo-height">
+      </label>
+    </div>
+
+    <!-- UX/UI Settings -->
+    <h3>User Experience &amp; Interface</h3>
+    <div class="admin-row">
+      <label>
+        Theme
+        <select id="admin-theme">
+          <option value="dark">Dark</option>
+          <option value="light">Light</option>
+          <option value="high-contrast">High Contrast</option>
+        </select>
+      </label>
+      <label>
+        Font Size Multiplier
+        <input type="number" min="0.8" max="1.5" step="0.1" id="admin-font-size">
+      </label>
+    </div>
+    <div class="admin-row">
+      <label style="display:flex;align-items:center;">
+        <input type="checkbox" id="admin-enable-animations" style="margin-right:0.5rem;"> Enable Animations
+      </label>
+      <label style="display:flex;align-items:center;">
+        <input type="checkbox" id="admin-enable-hover-effects" style="margin-right:0.5rem;"> Enable Hover Effects
+      </label>
+      <label style="display:flex;align-items:center;">
+        <input type="checkbox" id="admin-enable-loading-states" style="margin-right:0.5rem;"> Enable Loading States
+      </label>
+    </div>
+    <div class="admin-row">
+      <label style="display:flex;align-items:center;">
+        <input type="checkbox" id="admin-enable-accessibility" style="margin-right:0.5rem;"> Enable Accessibility Features
+      </label>
+      <label style="display:flex;align-items:center;">
+        <input type="checkbox" id="admin-enable-progress-indicator" style="margin-right:0.5rem;"> Enable Progress Indicator
+      </label>
+      <label style="display:flex;align-items:center;">
+        <input type="checkbox" id="admin-show-settings-controls" style="margin-right:0.5rem;"> Show Settings Controls
+      </label>
+    </div>
+
+    <!-- Presets & Reset -->
+    <h3>Presets &amp; Reset</h3>
+    <div class="admin-row">
+      <button type="button" id="preset-deltebre" style="background:#1976d2;color:#fff;padding:0.5rem 1rem;border:none;border-radius:0.25rem;cursor:pointer;">Quick Preset: Deltebre</button>
+    </div>
+    <div class="admin-buttons">
+      <button type="button" class="save">Save</button>
+      <button type="button" class="cancel">Cancel</button>
+      <button type="button" class="reset">Reset</button>
+    </div>
+  </form>
+</div>
+
+<script src="js/calculations.js"></script>
+<script src="trans/trans.js"></script>
+<script src="js/defaultsetting.js"></script>
+<script src="js/prayer_weather_logic.js"></script>
+<script src="js/api.js"></script> 
+
+</body>
+</html>
