@@ -45,6 +45,85 @@ npm install
 npm start
 ```
 
+### Full Raspberry Pi setup (from scratch)
+These steps assume Raspberry Pi OS (Debian-based) and a fresh device.
+
+1) **Update the system**
+
+```bash
+sudo apt update && sudo apt upgrade -y
+```
+
+2) **Install Node.js and Nginx**
+
+```bash
+sudo apt install -y nodejs npm nginx git
+```
+
+3) **Clone the app**
+
+```bash
+git clone https://github.com/ybeneloumda/prayerserver-display.git
+cd prayerserver-display
+```
+
+4) **Install dependencies**
+
+```bash
+npm install
+```
+
+5) **Copy the systemd service and enable it**
+
+```bash
+sudo cp deploy/prayerserver.service /etc/systemd/system/prayerserver.service
+sudo systemctl daemon-reload
+sudo systemctl enable prayerserver
+sudo systemctl start prayerserver
+```
+
+6) **Configure Nginx reverse proxy**
+
+```bash
+sudo cp deploy/nginx-prayerserver.conf /etc/nginx/sites-available/prayerserver
+sudo ln -s /etc/nginx/sites-available/prayerserver /etc/nginx/sites-enabled/prayerserver
+sudo nginx -t
+sudo systemctl reload nginx
+```
+
+7) **Open the app**
+
+```
+http://<raspberry-pi-ip>
+```
+
+### Raspberry Pi (recommended)
+Use port 3000 with Nginx on port 80 and a systemd service.
+
+1) **Copy the systemd service and enable it**
+
+```bash
+sudo cp deploy/prayerserver.service /etc/systemd/system/prayerserver.service
+sudo systemctl daemon-reload
+sudo systemctl enable prayerserver
+sudo systemctl start prayerserver
+```
+
+2) **Configure Nginx reverse proxy**
+
+```bash
+sudo cp deploy/nginx-prayerserver.conf /etc/nginx/sites-available/prayerserver
+sudo ln -s /etc/nginx/sites-available/prayerserver /etc/nginx/sites-enabled/prayerserver
+sudo nginx -t
+sudo systemctl reload nginx
+```
+
+3) **Optional: set port via environment**
+
+```bash
+cp .env.example .env
+```
+
 4. **Access the app**
 
 Open your browser and go to :
