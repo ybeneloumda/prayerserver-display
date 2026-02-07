@@ -13,7 +13,7 @@ const app = express();
 const PORT = 80;
 
 // Middleware
-app.use(bodyParser.json());
+app.use(bodyParser.json({ limit: '10mb' }));
 app.use(express.static(path.join(__dirname, 'public'))); // where prayer_app.html will be
 
 // Open SQLite database

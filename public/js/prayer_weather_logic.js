@@ -61,17 +61,25 @@ function getWeatherEmoji(condition) {
   return '🌡️';
 }
 
-// Utility to load settings from localStorage or defaults
+// Utility to load settings from database-backed storage or defaults
 function loadSettings() {
   try {
-    const saved = getSetting("prayerSettings");
-    if (saved) {
+    const saved = getSetting("prayerSettings", null);
+    if (saved && typeof saved === "string") {
       settings = Object.assign({}, defaultSettings, JSON.parse(saved));
+    } else if (saved && typeof saved === "object") {
+      settings = Object.assign({}, defaultSettings, saved);
     } else {
       settings = Object.assign({}, defaultSettings);
     }
   } catch (e) {
     settings = Object.assign({}, defaultSettings);
+  }
+  settings.serverIp = settings.serverIp || "prayerserver";
+  settings.serverPort = settings.serverPort || "80";
+  settings.serverSecured = settings.serverSecured || "https";
+  if (typeof settings.showSunrise === 'string') {
+    settings.showSunrise = settings.showSunrise.toLowerCase() === 'true';
   }
   // Ensure perIqamah object has all keys
   const prayers = ["Fajr","Dhuhr","Asr","Maghrib","Isha"];
@@ -81,7 +89,7 @@ function loadSettings() {
   });
 }
 
-// Save settings to localStorage
+// Save settings to database-backed storage
 function saveSettings() {
   setSetting("prayerSettings", JSON.stringify(settings));
 }
@@ -606,7 +614,22 @@ function formatDateLine(dateObj) {
 // Render UI based on computed times and settings
 function render() {
   document.getElementById('mosque-name').textContent = settings.mosqueName;
-  document.getElementById('location-label').textContent = settings.locationLabel;
+  const locEl = document.getElementById('location-label');
+  if (locEl) {
+    const label = (settings.locationLabel || '').trim();
+    if (label) {
+      locEl.textContent = label;
+    } else {
+      const hasCoords = Number.isFinite(settings.latitude) && Number.isFinite(settings.longitude) && !(settings.latitude === 0 && settings.longitude === 0);
+      if (hasCoords) {
+        locEl.textContent = `${settings.latitude.toFixed(2)}, ${settings.longitude.toFixed(2)}`;
+      } else if (settings.timezone) {
+        locEl.textContent = settings.timezone;
+      } else {
+        locEl.textContent = '';
+      }
+    }
+  }
   
   // update logo and background
   const bgDiv = document.getElementById('background-image');
@@ -691,7 +714,10 @@ function render() {
       card.className = 'prayer-card';
       const nameDiv = document.createElement('div');
       nameDiv.className = 'prayer-name';
-      nameDiv.textContent = translations[settings.language][prayer] || prayer;
+      const displayName = (prayer === 'Dhuhr' && settings.fridayMode && isFri)
+        ? (translations[settings.language].Jumuah || "Jumu'ah")
+        : (translations[settings.language][prayer] || prayer);
+      nameDiv.textContent = displayName;
       const timeDiv = document.createElement('div');
       timeDiv.className = 'prayer-time';
       // Determine adhan time
@@ -755,6 +781,10 @@ function render() {
         else if (nextEv.prayer === prayer) match = true;
         if (match) {
           card.classList.add('next');
+          const badgeEl = document.createElement('div');
+          badgeEl.className = 'next-prayer-badge';
+          badgeEl.textContent = translations[settings.language].Next || 'Next';
+          card.insertBefore(badgeEl, nameDiv);
           console.log(`Adding 'next' class to ${prayer} card - Next event: ${nextEv.prayer} at ${new Date(nextEv.time).toLocaleTimeString()}`);
           const diffMins = (nextEv.time - Date.now()) / 60000;
           if (settings.flashMinutes && diffMins <= settings.flashMinutes) {
@@ -1085,7 +1115,7 @@ function updateClockAndCountdown() {
       typeLabel = '';
     }
     // Build next event text with optional Iftar countdown
-    let nextText = `${translations[settings.language].Next}: ${prayerName} ${typeLabel}${hh}:${mm}:${ss}`;
+    let nextText = `${prayerName} ${typeLabel}${hh}:${mm}:${ss}`;
     // If Ramadan mode and Iftar countdown enabled, append countdown to Maghrib (Iftar) time
     if (settings.ramadanMode && settings.showIftarCountdown) {
       // Determine Iftar time: Maghrib adhan for today or tomorrow if already passed
@@ -1112,7 +1142,12 @@ function updateClockAndCountdown() {
         nextText += ` \u2022 ${iftarLabel}: ${ihh}:${imm}:${iss}`;
       }
     }
-    document.getElementById('next-event').textContent = nextText;
+    const nextEl = document.getElementById('next-event');
+    if (nextEl) {
+      const badge = translations[settings.language].Next || 'Next';
+      const text = toLatinDigits(nextText);
+      nextEl.innerHTML = `<span class="next-event-badge">${badge}</span><span class="next-event-text">${text}</span>`;
+    }
     
     // Check for prayer notifications
     if (settings.prayerNotifications && diff <= 0 && diff > -60000) { // Within 1 minute of prayer time
@@ -1122,7 +1157,8 @@ function updateClockAndCountdown() {
     // Re-render cards to apply flash if necessary
     // Avoid infinite loop: only call render when seconds is zero or diff changes drastically
   } else {
-    document.getElementById('next-event').textContent = '';
+    const nextEl = document.getElementById('next-event');
+    if (nextEl) nextEl.textContent = '';
   }
 
   // Always update weather display each tick to reflect staleness
@@ -1173,6 +1209,7 @@ function renderWeather() {
     weatherEl.style.display = 'none';
     return;
   }
+  const hasCoords = Number.isFinite(settings.latitude) && Number.isFinite(settings.longitude) && !(settings.latitude === 0 && settings.longitude === 0);
   
   // Show weather display even if no data yet
   weatherEl.style.display = 'flex';
@@ -1238,24 +1275,31 @@ function renderWeather() {
     
     // If no weather data is available yet, show a loading indicator or coordinates
     if (parts.length === 0) {
-      if (settings.weatherMode === 'online' && settings.latitude && settings.longitude) {
+      if (settings.weatherMode === 'online' && hasCoords) {
         if (settings.enableLoadingStates !== false) {
           weatherEl.classList.add('loading');
           parts.push('🌡️ Loading weather...');
         } else {
           parts.push('🌡️ Loading weather...');
         }
-      } else if (settings.latitude && settings.longitude) {
+      } else if (hasCoords) {
         parts.push(`📍 ${settings.latitude.toFixed(2)}, ${settings.longitude.toFixed(2)}`);
       } else {
-        parts.push('🌡️ Weather disabled');
+        parts.push('🌡️ Set location in Settings');
       }
+    }
+    if (settings.weatherError) {
+      parts.push(`⚠️ ${settings.weatherError}`);
     }
     // If only the icon is present and no other data (e.g., temperature/high/low/humidity/wind),
     // add a placeholder so the weather element isn't blank. This avoids an empty display when
     // the user hasn't provided a temperature or condition. The placeholder shows "N/A".
     if (parts.length === 1 && settings.weatherTemp === '') {
-      parts.push('N/A');
+      if (settings.weatherMode === 'online') {
+        parts.push('Waiting for weather...');
+      } else {
+        parts.push('N/A');
+      }
     }
     // Join with middot separators
     const inner = parts.join(' • ');
@@ -1319,18 +1363,28 @@ function renderWeather() {
 // fetches new data when the existing weather information is stale or absent.
 function fetchWeatherIfOnline() {
   if (settings.weatherMode !== 'online' || !settings.weatherEnabled) return;
+  settings.weatherError = '';
   
   // Check if we have valid coordinates
-  const lat = settings.latitude || 0;
-  const lon = settings.longitude || 0;
-  if (lat === 0 && lon === 0) {
+  const lat = Number.isFinite(settings.latitude) ? settings.latitude : 0;
+  const lon = Number.isFinite(settings.longitude) ? settings.longitude : 0;
+  const hasCoords = Number.isFinite(settings.latitude) && Number.isFinite(settings.longitude) && !(lat === 0 && lon === 0);
+  if (!hasCoords) {
+    settings.weatherError = 'No coordinates available';
     console.log('Weather: No coordinates available, skipping fetch');
     return;
   }
   
   const now = Date.now();
   const validMs = (settings.weatherValidHours || defaultSettings.weatherValidHours) * 3600000;
-  if (settings.weatherLastUpdated && (now - settings.weatherLastUpdated) < validMs) {
+  const hasCachedData = (settings.weatherTemp !== '' && !isNaN(settings.weatherTemp)) ||
+    !!settings.weatherCondition ||
+    (settings.weatherHigh !== '' && !isNaN(settings.weatherHigh)) ||
+    (settings.weatherLow !== '' && !isNaN(settings.weatherLow)) ||
+    !!settings.weatherHumidity ||
+    !!settings.weatherWind ||
+    (Array.isArray(settings.weatherForecastData) && settings.weatherForecastData.length > 0);
+  if (settings.weatherLastUpdated && (now - settings.weatherLastUpdated) < validMs && hasCachedData) {
     console.log('Weather: Data still valid, skipping fetch');
     return;
   }
@@ -1340,6 +1394,7 @@ function fetchWeatherIfOnline() {
   // OpenWeatherMap a valid API key is required. Open-Meteo is free and
   // open-source and does not require a key.
   const provider = (settings.weatherProvider || 'open-meteo').trim();
+  let providerToUse = provider;
   // Helper to update settings and call renderWeather()
   function updateAndRender(temp, high, low, humidity, windSpeed, condition) {
     if (temp !== null && temp !== undefined && !isNaN(temp)) {
@@ -1364,6 +1419,7 @@ function fetchWeatherIfOnline() {
     if (condition !== undefined && condition !== null) {
       settings.weatherCondition = condition;
     }
+    settings.weatherError = '';
     settings.weatherLastUpdated = Date.now();
     saveSettings();
     
@@ -1376,7 +1432,15 @@ function fetchWeatherIfOnline() {
     renderWeather();
   }
   // Use OpenWeatherMap provider
-  if (provider === 'openweather') {
+  if (providerToUse === 'openweather') {
+    const apiKey = settings.weatherApiKey ? settings.weatherApiKey.trim() : '';
+    if (!apiKey) {
+      console.warn('Weather: OpenWeather selected without API key, falling back to Open-Meteo.');
+      providerToUse = 'open-meteo';
+    }
+  }
+
+  if (providerToUse === 'openweather') {
     const apiKey = settings.weatherApiKey ? settings.weatherApiKey.trim() : '';
     if (!apiKey) return;
     // Determine units for API based on selected weatherUnits. 'imperial' yields Fahrenheit/mph, 'metric' yields Celsius/km/h
@@ -1409,6 +1473,8 @@ function fetchWeatherIfOnline() {
       console.log('Weather: OpenWeather data received:', data);
     }).catch(err => {
       console.error('Weather fetch error (OpenWeather):', err);
+      settings.weatherError = `OpenWeather error: ${err.message || err.toString()}`;
+      renderWeather();
     });
     return;
   }
@@ -1431,7 +1497,10 @@ function fetchWeatherIfOnline() {
   }
   
   url += `&timezone=${encodeURIComponent(settings.timezone || 'auto')}`;
-  fetch(url).then(resp => resp.json()).then(data => {
+  fetch(url).then(resp => {
+    if (!resp.ok) throw new Error(`Open-Meteo HTTP ${resp.status}`);
+    return resp.json();
+  }).then(data => {
     if (!data || !data.current) return;
     const current = data.current;
     const daily = data.daily || {};
@@ -1521,9 +1590,11 @@ function fetchWeatherIfOnline() {
     console.log('Weather: Open-Meteo data processed successfully');
   }).catch(err => {
     console.error('Weather fetch error (Open-Meteo):', err);
+    settings.weatherError = `Open-Meteo error: ${err.message || err.toString()}`;
+    renderWeather();
     
     // Try fallback API if enabled
-    if (settings.weatherFallbacks && provider === 'open-meteo') {
+    if (settings.weatherFallbacks && providerToUse === 'open-meteo') {
       console.log('Weather: Trying fallback API...');
       fetchWeatherFallback(lat, lon);
     }
@@ -1647,7 +1718,10 @@ function fetchWeatherFallback(lat, lon) {
   // Use a different Open-Meteo endpoint as fallback
   const url = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current=temperature_2m,relative_humidity_2m,wind_speed_10m,weather_code&temperature_unit=${tempUnit}&windspeed_unit=${windUnit}&timezone=auto`;
   
-  fetch(url).then(resp => resp.json()).then(data => {
+  fetch(url).then(resp => {
+    if (!resp.ok) throw new Error(`Open-Meteo fallback HTTP ${resp.status}`);
+    return resp.json();
+  }).then(data => {
     if (!data || !data.current) return;
     const current = data.current;
     const temp = current.temperature_2m;
@@ -1663,6 +1737,8 @@ function fetchWeatherFallback(lat, lon) {
     console.log('Weather: Fallback API data processed successfully');
   }).catch(err => {
     console.error('Weather: All APIs failed:', err);
+    settings.weatherError = `Fallback error: ${err.message || err.toString()}`;
+    renderWeather();
   });
 }
 
@@ -1887,22 +1963,9 @@ function translateAdminPanel() {
 
 // Populate admin form with current settings
 function populateAdminForm() {
-
-    var server = localStorage.getItem('admin-server-ip');
-    if(server !== null){
-        document.getElementById('admin-server-ip').value = server;
-    }
-
-    var port = localStorage.getItem('admin-server-port');
-    if(port !== null){
-        document.getElementById('admin-server-port').value = port;
-    }
-    
-    var secured = localStorage.getItem('admin-server-secured');
-    if(secured !== null){
-        document.getElementById('admin-server-secured').value = secured;
-    }
-    
+  document.getElementById('admin-server-ip').value = settings.serverIp || 'prayerserver';
+  document.getElementById('admin-server-port').value = settings.serverPort || '80';
+  document.getElementById('admin-server-secured').value = settings.serverSecured || 'https';
 
   document.getElementById('admin-mosque-name').value = settings.mosqueName;
   document.getElementById('admin-location-label').value = settings.locationLabel;
@@ -2195,6 +2258,7 @@ function toggleAdminPanel(show) {
 
 // Handle admin actions
 function setupAdminHandlers() {
+  setupAdminTabs();
   // Add event listener for admin panel language change
   const adminPanelLangSelect = document.getElementById('admin-panel-lang');
   if (adminPanelLangSelect) {
@@ -2204,25 +2268,32 @@ function setupAdminHandlers() {
     });
   }
   document.querySelector('.save').addEventListener('click', () => {
-
-    
-    var server = document.getElementById('admin-server-ip').value;
-    localStorage.setItem('admin-server-ip',server);
-    
-    var port = document.getElementById('admin-server-port').value;
-    localStorage.setItem('admin-server-port',port);
-    
-    var secured = document.getElementById('admin-server-secured').value;
-    localStorage.setItem('admin-server-secured',secured);
-
+    settings.serverIp = document.getElementById('admin-server-ip').value.trim() || 'prayerserver';
+    settings.serverPort = document.getElementById('admin-server-port').value.trim() || '80';
+    settings.serverSecured = document.getElementById('admin-server-secured').value || 'https';
 
     // Save values from form
     settings.mosqueName = document.getElementById('admin-mosque-name').value.trim();
     settings.locationLabel = document.getElementById('admin-location-label').value.trim();
-    settings.mode = document.getElementById('admin-mode').value;
-    settings.latitude = parseFloat(document.getElementById('admin-lat').value) || 0;
-    settings.longitude = parseFloat(document.getElementById('admin-lng').value) || 0;
-    settings.timezone = document.getElementById('admin-tz').value.trim() || settings.timezone;
+    const modeVal = document.getElementById('admin-mode').value;
+    settings.mode = modeVal;
+    const latInput = document.getElementById('admin-lat').value;
+    const lngInput = document.getElementById('admin-lng').value;
+    const tzInput = document.getElementById('admin-tz').value.trim();
+    if (modeVal === 'manual') {
+      settings.latitude = parseFloat(latInput) || 0;
+      settings.longitude = parseFloat(lngInput) || 0;
+      settings.timezone = tzInput || settings.timezone;
+    } else {
+      // In auto mode, keep existing coordinates unless valid manual values are present.
+      const latVal = parseFloat(latInput);
+      const lngVal = parseFloat(lngInput);
+      if (isFinite(latVal) && isFinite(lngVal) && !(latVal === 0 && lngVal === 0)) {
+        settings.latitude = latVal;
+        settings.longitude = lngVal;
+      }
+      if (tzInput) settings.timezone = tzInput;
+    }
     settings.calculationMethod = document.getElementById('admin-method').value;
     settings.asrMethod = document.getElementById('admin-asr').value;
     settings.iqamahDelay = parseInt(document.getElementById('admin-global-iqamah').value) || 0;
@@ -2407,13 +2478,38 @@ function setupAdminHandlers() {
   
   document.querySelector('.reset').addEventListener('click', () => {
     if (confirm("Reset all settings to factory defaults?")) {
-      localStorage.removeItem('prayerSettings');
-      loadSettings();
+      settings = Object.assign({}, defaultSettings, {
+        serverIp: settings.serverIp || 'prayerserver',
+        serverPort: settings.serverPort || '80',
+        serverSecured: settings.serverSecured || 'https'
+      });
       saveSettings();
       toggleAdminPanel(false);
       init();
     }
   });
+
+  // Clear logo/background buttons
+  const logoClearBtn = document.getElementById('admin-logo-clear');
+  if (logoClearBtn) {
+    logoClearBtn.addEventListener('click', () => {
+      settings.logoDataUrl = '';
+      const logoInput = document.getElementById('admin-logo');
+      if (logoInput) logoInput.value = '';
+      saveSettings();
+      init();
+    });
+  }
+  const bgClearBtn = document.getElementById('admin-bg-clear');
+  if (bgClearBtn) {
+    bgClearBtn.addEventListener('click', () => {
+      settings.backgroundDataUrl = '';
+      const bgInput = document.getElementById('admin-bg');
+      if (bgInput) bgInput.value = '';
+      saveSettings();
+      init();
+    });
+  }
   
   document.getElementById('admin-mode').addEventListener('change', (e) => {
     const manual = e.target.value === 'manual';
@@ -2451,6 +2547,27 @@ function setupAdminHandlers() {
       toggleAdminPanel(!panel.classList.contains('active'));
     });
   }
+}
+
+function setupAdminTabs() {
+  const tabs = Array.from(document.querySelectorAll('.admin-tab'));
+  const sections = Array.from(document.querySelectorAll('.admin-section'));
+  if (tabs.length === 0 || sections.length === 0) return;
+  const activate = (tabId) => {
+    tabs.forEach(btn => {
+      const isActive = btn.dataset.tab === tabId;
+      btn.classList.toggle('active', isActive);
+      btn.setAttribute('aria-selected', isActive ? 'true' : 'false');
+    });
+    sections.forEach(sec => {
+      sec.classList.toggle('active', sec.dataset.tabSection === tabId);
+    });
+  };
+  tabs.forEach(btn => {
+    btn.addEventListener('click', () => activate(btn.dataset.tab));
+  });
+  const defaultTab = tabs.find(t => t.classList.contains('active'))?.dataset.tab || tabs[0].dataset.tab;
+  activate(defaultTab);
 }
 
 // Listen for global hotkeys
@@ -2627,7 +2744,10 @@ function testManualLTROverride() {
 }
 
 // On page load
-window.addEventListener('load', () => {
+window.addEventListener('load', async () => {
+  if (typeof initServerSettings === 'function') {
+    await initServerSettings();
+  }
   loadSettings();
   applyLayout();
   setupAdminHandlers();

@@ -1,82 +1,48 @@
+function getApiBaseUrl() {
+  const protocol = (window.location.protocol || "http:").replace(":", "");
+  const host = window.location.hostname || "localhost";
+  const port = window.location.port || "80";
+  return `${protocol}://${host}:${port}`;
+}
+
 async function loadSettingsFromServer() {
-    try {
-
-        var server = localStorage.getItem('admin-server-ip');
-        if (server === null){
-            server = document.getElementById('admin-server-ip').value;
-        }
-
-        var port = localStorage.getItem('admin-server-port');
-        if (port === null){
-            port = document.getElementById('admin-server-port').value;
-        }
-
-        var secured = localStorage.getItem('admin-server-secured');
-        if (secured === null){
-            secured = document.getElementById('admin-server-secured').value;
-        }
-        
-
-        const res = await fetch(secured+'://'+server+':'+port+'/api/get-settings');
-        if (!res.ok) throw new Error('Network error');
-        const data = await res.json();
-        console.log('Loaded settings from server', data);
-        return data;
-    } catch (err) {
-        console.warn('Falling back to localStorage due to error:', err);
-        return JSON.parse(localStorage.getItem('prayerSettings') || '{}');
-    }
+  const res = await fetch(`${getApiBaseUrl()}/api/get-settings`);
+  if (!res.ok) throw new Error(`Failed to load settings (${res.status})`);
+  return await res.json();
 }
 
 async function saveSettingsToServer(settings) {
-    try {
-        
+  const res = await fetch(`${getApiBaseUrl()}/api/save-settings`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(settings)
+  });
 
-        var server = localStorage.getItem('admin-server-ip');
-        if (server === null){
-            server = document.getElementById('admin-server-ip').value;
-        }
-
-        var port = localStorage.getItem('admin-server-port');
-        if (port === null){
-            port = document.getElementById('admin-server-port').value;
-        }
-
-        var secured = localStorage.getItem('admin-server-secured');
-        if (secured === null){
-            secured = document.getElementById('admin-server-secured').value;
-        }
-        
-        const res = await fetch(secured+'://'+server+':'+port+'/api/get-settings', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(settings)
-        });
-        if (!res.ok) throw new Error('Network error');
-        console.log('Saved settings to server', settings);
-    } catch (err) {
-        console.warn('Saving to localStorage due to error:', err);
-        localStorage.setItem('prayerSettings', JSON.stringify(settings));
-    }
+  if (!res.ok) throw new Error(`Failed to save settings (${res.status})`);
 }
 
-// Replace localStorage GET
 function getSetting(key, defaultValue) {
-    if (window.serverSettings && key in window.serverSettings) {
-        return window.serverSettings[key];
-    }
+  if (!window.serverSettings || !(key in window.serverSettings)) {
     return defaultValue;
+  }
+  return window.serverSettings[key];
 }
 
-// Replace localStorage SET
 function setSetting(key, value) {
-    window.serverSettings[key] = value;
-    saveSettingsToServer(window.serverSettings);
+  if (!window.serverSettings) window.serverSettings = {};
+  window.serverSettings[key] = value;
+
+  // Fire and forget saves so UI updates remain responsive.
+  saveSettingsToServer(window.serverSettings).catch((err) => {
+    console.error("Could not save settings to database:", err);
+  });
 }
 
-// Load settings on startup
-(async function initSettings() {
+async function initServerSettings() {
+  try {
     window.serverSettings = await loadSettingsFromServer();
-    // call your existing render/init function here after settings are loaded
-    render(); // assuming render() is your UI function
-})();
+  } catch (err) {
+    console.error("Could not load settings from database:", err);
+    window.serverSettings = {};
+  }
+}

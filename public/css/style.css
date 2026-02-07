@@ -1,108 +1,102 @@
-
-/* CSS variables for easy customization */
 :root {
-  --background-color: #0a0a0f;
-  --card-bg: linear-gradient(160deg, #1a1a2e, #16213e);
-  --card-border: #2d3748;
-  --accent-color: #00d4ff;
-  --accent-secondary: #ff6b9d;
-  --accent-tertiary: #4ecdc4;
-  --text-color: #f7fafc;
-  --muted-color: #a0aec0;
+  --background-color: #091421;
+  --background-gradient: radial-gradient(1200px 800px at 12% 10%, rgba(40, 109, 165, 0.24), transparent 58%), radial-gradient(900px 700px at 86% 12%, rgba(208, 155, 73, 0.18), transparent 56%), linear-gradient(155deg, #07101a 0%, #0a1727 46%, #0d1f32 100%);
+  --card-bg: linear-gradient(165deg, rgba(255, 255, 255, 0.08), rgba(255, 255, 255, 0.03));
+  --card-border: rgba(255, 255, 255, 0.15);
+  --accent-color: #6ec5ff;
+  --accent-secondary: #d9b36f;
+  --accent-tertiary: #88e0b9;
+  --text-color: #f3f7fd;
+  --muted-color: #b9c9de;
   --next-border-width: 3px;
-  --font-family: 'Segoe UI', Tahoma, sans-serif;
-  --gap: 0.75rem;
-  --card-height: 6rem;
-  --card-max-width: 16rem;
-  --header-padding: 1rem;
-  --footer-height: 3rem;
-  /* Default logo height in rem; can be overridden via settings */
+  --font-family: "Trebuchet MS", "Gill Sans", "Segoe UI Variable Display", "Candara", sans-serif;
+  --gap: 0.85rem;
+  --card-height: 6.6rem;
+  --card-max-width: 16.5rem;
+  --header-padding: 0.95rem;
+  --footer-height: 3.2rem;
   --logo-height: 3rem;
 
-  /* Typography variables: these can be overridden via settings */
   --clock-size: 2rem;
-  --next-event-size: 1.5rem;
-  --slideshow-size: 2.5rem;
-  --card-name-scale: 0.25;
-  --card-time-scale: 0.30;
-  --card-iqamah-scale: 0.18;
-  /* Default margins for the slideshow (vertical spacing between cards and footer) */
+  --next-event-size: 1.25rem;
+  --slideshow-size: 2.2rem;
+  --card-name-scale: 0.24;
+  --card-time-scale: 0.29;
+  --card-iqamah-scale: 0.16;
+  --ticker-size: 1rem;
   --slideshow-margin-top: 0.5rem;
   --slideshow-margin-bottom: 0.5rem;
-  /* Weather display styles */
+
   --weather-font-size: 0.9rem;
   --weather-icon-size: 1.2rem;
-  --weather-stale-color: #ffcc00;
+  --weather-stale-color: #ffd580;
   --weather-normal-color: var(--muted-color);
-  
-  /* Enhanced weather features */
-  --weather-forecast-size: 0.8rem;
-  --weather-alert-color: #ff6b6b;
-  --weather-air-quality-good: #4caf50;
-  --weather-air-quality-moderate: #ff9800;
-  --weather-air-quality-poor: #f44336;
-  --weather-forecast-bg: rgba(0, 0, 0, 0.1);
-  --weather-forecast-border: rgba(255, 255, 255, 0.1);
-  
-  /* New UX/UI variables */
-  --transition-duration: 0.3s;
-  --transition-timing: cubic-bezier(0.4, 0, 0.2, 1);
-  --loading-opacity: 0.6;
-  --hover-scale: 1.02;
-  --focus-outline: 2px solid var(--accent-color);
+  --weather-forecast-size: 0.78rem;
+  --weather-alert-color: #ff8a8a;
+  --weather-air-quality-good: #41b773;
+  --weather-air-quality-moderate: #d39f3f;
+  --weather-air-quality-poor: #da5a5a;
+
+  --transition-duration: 0.28s;
+  --transition-timing: cubic-bezier(0.22, 1, 0.36, 1);
+  --loading-opacity: 0.62;
+  --hover-scale: 1.01;
+  --focus-outline: 2px solid rgba(110, 197, 255, 0.95);
   --focus-outline-offset: 2px;
-  --shadow-light: 0 2px 8px rgba(0, 0, 0, 0.1);
-  --shadow-medium: 0 4px 16px rgba(0, 0, 0, 0.2);
-  --shadow-heavy: 0 8px 32px rgba(0, 0, 0, 0.3);
-  --shadow-card: 0 4px 12px rgba(0, 0, 0, 0.15);
-  --shadow-card-hover: 0 8px 24px rgba(0, 0, 0, 0.25);
-  --border-radius: 0.5rem;
+
+  --shadow-light: 0 4px 16px rgba(0, 0, 0, 0.16);
+  --shadow-medium: 0 10px 26px rgba(0, 0, 0, 0.28);
+  --shadow-heavy: 0 20px 44px rgba(0, 0, 0, 0.34);
+  --shadow-card: 0 8px 20px rgba(0, 0, 0, 0.2);
+  --shadow-card-hover: 0 14px 32px rgba(0, 0, 0, 0.3);
+
+  --border-radius: 0.55rem;
   --border-radius-large: 1rem;
-  --border-radius-card: 0.75rem;
-  --gradient-card: linear-gradient(145deg, rgba(0, 212, 255, 0.1), rgba(255, 107, 157, 0.05));
-  --gradient-card-hover: linear-gradient(145deg, rgba(0, 212, 255, 0.15), rgba(255, 107, 157, 0.08));
-  --gradient-header: linear-gradient(135deg, rgba(80, 80, 120, 0.9), rgba(100, 120, 160, 0.9));
-  --gradient-footer: linear-gradient(135deg, rgba(26, 26, 46, 0.8), rgba(22, 33, 62, 0.8));
-  
-  /* Theme support */
+  --border-radius-card: 0.9rem;
+  --gradient-card: var(--card-bg);
+  --gradient-card-hover: linear-gradient(165deg, rgba(255, 255, 255, 0.14), rgba(255, 255, 255, 0.06));
+  --gradient-header: linear-gradient(145deg, rgba(8, 18, 29, 0.94), rgba(11, 27, 43, 0.85));
+  --gradient-footer: linear-gradient(145deg, rgba(7, 17, 27, 0.96), rgba(9, 22, 35, 0.9));
+
   --theme-transition: all var(--transition-duration) var(--transition-timing);
 }
 
-/* Light theme variables */
 [data-theme="light"] {
-  --background-color: #f5f5f5;
-  --card-bg: linear-gradient(160deg, #ffffff, #f8f9fa);
-  --card-border: #e0e0e0;
-  --accent-color: #1976d2;
-  --text-color: #333333;
-  --muted-color: #666666;
-  --shadow-light: 0 2px 8px rgba(0, 0, 0, 0.1);
-  --shadow-medium: 0 4px 16px rgba(0, 0, 0, 0.15);
-  --shadow-heavy: 0 8px 32px rgba(0, 0, 0, 0.2);
-  --shadow-card: 0 2px 8px rgba(0, 0, 0, 0.08);
-  --shadow-card-hover: 0 4px 16px rgba(0, 0, 0, 0.12);
-  --gradient-card: linear-gradient(145deg, #ffffff, #f8f9fa);
-  --gradient-card-hover: linear-gradient(145deg, #ffffff, #f0f2f5);
-  --gradient-header: linear-gradient(135deg, rgba(255, 255, 255, 0.95), rgba(248, 249, 250, 0.95));
+  --background-color: #edf3fb;
+  --background-gradient: radial-gradient(1200px 800px at 8% 8%, rgba(70, 130, 200, 0.18), transparent 56%), radial-gradient(900px 640px at 90% 14%, rgba(218, 170, 96, 0.2), transparent 56%), linear-gradient(155deg, #e7eef8 0%, #f6f9fd 42%, #e9f2fb 100%);
+  --card-bg: linear-gradient(165deg, rgba(255, 255, 255, 0.92), rgba(251, 253, 255, 0.74));
+  --card-border: rgba(28, 64, 99, 0.16);
+  --accent-color: #1768ac;
+  --accent-secondary: #a87720;
+  --accent-tertiary: #188767;
+  --text-color: #12253b;
+  --muted-color: #45627e;
+  --gradient-header: linear-gradient(145deg, rgba(255, 255, 255, 0.92), rgba(238, 246, 255, 0.86));
+  --gradient-footer: linear-gradient(145deg, rgba(255, 255, 255, 0.95), rgba(234, 244, 255, 0.87));
+  --shadow-light: 0 4px 16px rgba(20, 39, 60, 0.08);
+  --shadow-medium: 0 9px 24px rgba(20, 39, 60, 0.14);
+  --shadow-heavy: 0 16px 36px rgba(20, 39, 60, 0.19);
+  --shadow-card: 0 7px 16px rgba(20, 39, 60, 0.1);
+  --shadow-card-hover: 0 12px 28px rgba(20, 39, 60, 0.16);
 }
 
-/* High contrast mode */
 [data-theme="high-contrast"] {
-  --background-color: #000000;
-  --card-bg: #ffffff;
-  --card-border: #ffffff;
-  --accent-color: #ffff00;
-  --text-color: #ffffff;
-  --muted-color: #cccccc;
+  --background-color: #000;
+  --background-gradient: linear-gradient(180deg, #000, #000);
+  --card-bg: #000;
+  --card-border: #fff;
+  --accent-color: #ffe600;
+  --accent-secondary: #00e6ff;
+  --accent-tertiary: #72ff72;
+  --text-color: #fff;
+  --muted-color: #fff;
   --next-border-width: 4px;
 }
 
-/* Accessibility improvements */
 * {
   box-sizing: border-box;
 }
 
-/* Focus styles for better accessibility */
 button:focus,
 input:focus,
 select:focus,
@@ -111,53 +105,332 @@ textarea:focus {
   outline-offset: var(--focus-outline-offset);
 }
 
-/* Skip to content link for screen readers */
 .skip-link {
   position: absolute;
-  top: -40px;
-  left: 6px;
+  top: -44px;
+  left: 8px;
   background: var(--accent-color);
-  color: white;
-  padding: 8px;
-  text-decoration: none;
+  color: #07101a;
+  padding: 0.4rem 0.7rem;
   border-radius: var(--border-radius);
-  z-index: 1000;
-  transition: var(--theme-transition);
+  text-decoration: none;
+  z-index: 1100;
 }
 
 .skip-link:focus {
-  top: 6px;
+  top: 8px;
 }
 
-/* Loading states */
 .loading {
   opacity: var(--loading-opacity);
   pointer-events: none;
-  transition: var(--theme-transition);
 }
 
 .loading::after {
-  content: '';
+  content: "";
   position: absolute;
   top: 50%;
   left: 50%;
-  width: 20px;
-  height: 20px;
-  margin: -10px 0 0 -10px;
+  width: 22px;
+  height: 22px;
+  margin: -11px 0 0 -11px;
   border: 2px solid var(--accent-color);
-  border-top: 2px solid transparent;
+  border-top-color: transparent;
   border-radius: 50%;
   animation: spin 1s linear infinite;
 }
 
 @keyframes spin {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
 }
 
-/* Smooth transitions for all interactive elements */
-.prayer-card,
+body {
+  margin: 0;
+  padding: 0;
+  background-color: var(--background-color);
+  background-image: var(--background-gradient);
+  color: var(--text-color);
+  font-family: var(--font-family);
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  overflow: hidden;
+}
+
+.app-container {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  overflow: hidden;
+}
+
+header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: var(--header-padding);
+  background: var(--gradient-header);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.16);
+  box-shadow: var(--shadow-light);
+  backdrop-filter: blur(10px);
+  position: relative;
+  z-index: 2;
+}
+
+.header-left {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  max-width: 60%;
+}
+
+#mosque-name {
+  font-size: clamp(1.3rem, 3.4vw, 2rem);
+  font-weight: 700;
+  line-height: 1.15;
+  letter-spacing: 0.02em;
+  color: var(--text-color);
+}
+
+#date-line {
+  margin-top: 0.2rem;
+  font-size: 0.95rem;
+  color: var(--muted-color);
+}
+
+.header-right {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  text-align: right;
+  gap: 0.12rem;
+}
+
+#digital-clock {
+  font-size: var(--clock-size);
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  font-variant-numeric: tabular-nums;
+  direction: ltr;
+  unicode-bidi: embed;
+  color: var(--accent-color);
+}
+
+#location-label {
+  font-size: 0.9rem;
+  color: var(--muted-color);
+}
+
+.logo {
+  height: var(--logo-height);
+  width: auto;
+  filter: drop-shadow(0 4px 10px rgba(0, 0, 0, 0.25));
+}
+
+#weather-display {
+  margin-top: 0.2rem;
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+  font-size: var(--weather-font-size);
+  color: var(--weather-normal-color);
+  flex-wrap: wrap;
+}
+
+#weather-display.stale {
+  color: var(--weather-stale-color);
+}
+
+#weather-display img {
+  height: var(--weather-icon-size);
+  width: auto;
+}
+
+#weather-display .weather-emoji {
+  font-size: var(--weather-icon-size);
+  line-height: 1;
+}
+
+.weather-forecast {
+  display: flex;
+  gap: 0.4rem;
+  margin-top: 0.35rem;
+  padding: 0.4rem;
+  border-radius: var(--border-radius);
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  background: rgba(255, 255, 255, 0.06);
+  font-size: var(--weather-forecast-size);
+  backdrop-filter: blur(6px);
+}
+
+.weather-forecast-day {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.15rem;
+  min-width: 2.9rem;
+}
+
+.weather-alert {
+  color: var(--weather-alert-color);
+  font-weight: 700;
+  animation: pulse 1.8s ease-in-out infinite;
+}
+
+.weather-air-quality {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  border-radius: var(--border-radius);
+  padding: 0.22rem 0.45rem;
+  font-size: 0.78rem;
+  color: #fff;
+}
+
+.weather-air-quality.good { background: var(--weather-air-quality-good); }
+.weather-air-quality.moderate { background: var(--weather-air-quality-moderate); }
+.weather-air-quality.poor { background: var(--weather-air-quality-poor); }
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.58; }
+}
+
 #admin-btn,
+#settings-toggle,
+#theme-toggle,
+#settings-controls #share-btn,
+#font-controls button {
+  border: 1px solid rgba(255, 255, 255, 0.22);
+  color: var(--text-color);
+  background: rgba(255, 255, 255, 0.08);
+  box-shadow: var(--shadow-light);
+  transition: var(--theme-transition);
+}
+
+#admin-btn {
+  margin-top: 0.2rem;
+  padding: 0.24rem 0.55rem;
+  border-radius: 0.35rem;
+  font-size: 0.78rem;
+  cursor: pointer;
+}
+
+#admin-btn:hover {
+  border-color: var(--accent-color);
+  color: var(--accent-color);
+}
+
+#settings-toggle {
+  position: fixed;
+  bottom: 4rem;
+  left: 0.9rem;
+  width: 46px;
+  height: 46px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  z-index: 1000;
+}
+
+#settings-toggle:hover,
+#theme-toggle:hover,
+#settings-controls #share-btn:hover,
+#font-controls button:hover {
+  transform: translateY(-1px) scale(1.05);
+  box-shadow: var(--shadow-medium);
+}
+
+#settings-controls {
+  position: fixed;
+  bottom: 4rem;
+  left: 4.5rem;
+  display: none;
+  align-items: center;
+  gap: 0.45rem;
+  padding: 0.42rem;
+  border-radius: 0.9rem;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  background: linear-gradient(145deg, rgba(10, 27, 43, 0.9), rgba(13, 35, 56, 0.84));
+  backdrop-filter: blur(10px);
+  box-shadow: var(--shadow-medium);
+  z-index: 1000;
+}
+
+#theme-toggle,
+#settings-controls #share-btn {
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+
+#font-controls {
+  display: flex;
+  align-items: center;
+  gap: 0.36rem;
+  border-radius: 0.65rem;
+  padding: 0.32rem;
+  border: 1px solid rgba(255, 255, 255, 0.17);
+  background: rgba(255, 255, 255, 0.05);
+}
+
+#font-controls button {
+  width: 31px;
+  height: 31px;
+  border-radius: 0.4rem;
+  font-size: 0.86rem;
+  cursor: pointer;
+}
+
+.qibla-indicator {
+  position: fixed;
+  left: 0.9rem;
+  bottom: 7.15rem;
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid rgba(255, 255, 255, 0.24);
+  background: rgba(11, 30, 48, 0.8);
+  box-shadow: var(--shadow-medium);
+  backdrop-filter: blur(8px);
+  z-index: 1000;
+}
+
+.qibla-arrow {
+  width: 0;
+  height: 0;
+  border-left: 8px solid transparent;
+  border-right: 8px solid transparent;
+  border-bottom: 20px solid var(--accent-secondary);
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.34));
+}
+
+#cards-container {
+  flex: 1;
+  min-height: 0;
+  display: grid;
+  grid-auto-rows: var(--card-height);
+  grid-template-columns: repeat(auto-fit, minmax(min(var(--card-max-width), 100%), 1fr));
+  align-content: start;
+  gap: var(--gap);
+  padding: calc(var(--gap) * 1.2);
+  overflow-y: auto;
+}
+
+.prayer-card,
 button,
 input,
 select,
@@ -165,239 +438,536 @@ textarea {
   transition: var(--theme-transition);
 }
 
-/* Enhanced hover effects */
-.prayer-card:hover {
-  transform: translateY(-2px);
-  box-shadow: var(--shadow-medium);
-}
-
-#admin-btn:hover {
-  transform: translateY(-1px);
-  box-shadow: var(--shadow-light);
-}
-
-/* Settings toggle button */
-#settings-toggle {
-  position: fixed;
-  bottom: 4rem;
-  left: 1rem;
-  background: var(--card-bg);
+.prayer-card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 0.74rem 0.95rem;
+  border-radius: var(--border-radius-card);
   border: 1px solid var(--card-border);
-  border-radius: 50%;
-  width: 48px;
-  height: 48px;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 1.2rem;
-  z-index: 1000;
-  transition: var(--theme-transition);
-  box-shadow: var(--shadow-light);
+  background: var(--gradient-card);
+  box-shadow: var(--shadow-card);
+  backdrop-filter: blur(6px);
+  overflow: hidden;
 }
 
-#settings-toggle:hover {
-  transform: scale(1.1);
-  box-shadow: var(--shadow-medium);
+.prayer-card::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(120deg, transparent, rgba(255, 255, 255, 0.18), transparent);
+  transform: translateX(-130%);
+  transition: transform 0.75s ease;
+  pointer-events: none;
 }
 
-#settings-toggle:focus {
-  outline: var(--focus-outline);
-  outline-offset: var(--focus-outline-offset);
+.prayer-card:hover {
+  background: var(--gradient-card-hover);
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-card-hover);
 }
 
-/* Settings controls container */
-#settings-controls {
-  position: fixed;
-  bottom: 4rem;
-  left: 5rem;
+.prayer-card:hover::before {
+  transform: translateX(130%);
+}
+
+.prayer-card.next {
+  border-color: rgba(255, 206, 123, 0.75);
+  background: linear-gradient(150deg, rgba(34, 24, 6, 0.92), rgba(14, 22, 34, 0.9));
+  box-shadow: 0 0 0 1px rgba(255, 206, 123, 0.55),
+    0 0 26px rgba(255, 188, 92, 0.26),
+    0 0 40px rgba(96, 210, 255, 0.2);
+  animation: next-glow 2.2s ease-in-out infinite;
+}
+
+@keyframes next-glow {
+  0%, 100% {
+    box-shadow: 0 0 0 1px rgba(255, 206, 123, 0.5),
+      0 0 22px rgba(255, 188, 92, 0.22),
+      0 0 38px rgba(96, 210, 255, 0.18);
+  }
+  50% {
+    box-shadow: 0 0 0 1px rgba(255, 140, 82, 0.6),
+      0 0 34px rgba(255, 140, 82, 0.28),
+      0 0 54px rgba(96, 210, 255, 0.28);
+  }
+}
+
+.next-prayer-badge {
+  font-size: 0.72rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  padding: 0.2rem 0.55rem;
+  border-radius: 999px;
+  background: linear-gradient(135deg, rgba(95, 210, 255, 0.95), rgba(84, 155, 255, 0.92));
+  color: #06111d;
+  box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.08);
+  margin-bottom: 0.35rem;
+}
+
+.prayer-name {
+  font-size: clamp(1.1rem, calc(var(--card-height) * var(--card-name-scale)), 3.2rem);
+  font-weight: 700;
+  margin-bottom: 0.28rem;
+  letter-spacing: 0.02em;
+  text-align: center;
+  white-space: nowrap;
+  overflow: hidden;
+}
+
+.prayer-time {
+  font-size: clamp(1.45rem, calc(var(--card-height) * var(--card-time-scale)), 4.8rem);
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  font-variant-numeric: tabular-nums;
+  text-align: center;
+  white-space: nowrap;
+  overflow: hidden;
+  direction: ltr;
+  unicode-bidi: embed;
+}
+
+.prayer-iqamah {
+  font-size: clamp(0.85rem, calc(var(--card-height) * var(--card-iqamah-scale)), 1.8rem);
+  margin-top: 0.22rem;
+  color: var(--muted-color);
+  text-align: center;
+  direction: ltr;
+  unicode-bidi: embed;
+}
+
+.prayer-iqamah:empty {
   display: none;
-  gap: 0.5rem;
-  z-index: 1000;
-  transition: var(--theme-transition);
+  margin-top: 0;
+}
+
+footer {
+  height: var(--footer-height);
+  display: flex;
   align-items: center;
-  background: linear-gradient(135deg, rgba(26, 26, 46, 0.9), rgba(22, 33, 62, 0.9));
-  backdrop-filter: blur(15px);
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0 1rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.16);
+  background: var(--gradient-footer);
+  box-shadow: 0 -8px 24px rgba(0, 0, 0, 0.18);
+  backdrop-filter: blur(10px);
+  position: relative;
+  z-index: 2;
+}
+
+#ticker {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  white-space: nowrap;
+}
+
+.ticker-inner {
+  display: inline-flex;
+  align-items: center;
+  white-space: nowrap;
+}
+
+.ticker-slide {
+  display: inline-block;
+  padding-right: 2rem;
+  color: var(--text-color);
+  font-size: var(--ticker-size);
+}
+
+@keyframes ticker-move-ltr {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
+}
+
+@keyframes ticker-move-rtl {
+  from { transform: translateX(0); }
+  to { transform: translateX(50%); }
+}
+
+#next-event {
+  font-size: var(--next-event-size);
+  font-weight: 700;
+  color: var(--text-color);
+  white-space: nowrap;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.55rem;
+  padding: 0.35rem 0.7rem;
+  border-radius: 999px;
+  background: linear-gradient(135deg, rgba(12, 30, 46, 0.85), rgba(8, 18, 30, 0.9));
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.22);
+}
+
+.next-event-badge {
+  font-size: 0.72em;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  padding: 0.2rem 0.55rem;
+  border-radius: 999px;
+  background: linear-gradient(135deg, rgba(255, 212, 140, 0.95), rgba(217, 179, 111, 0.92));
+  color: #1c1608;
+  box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.08);
+}
+
+.next-event-text {
+  color: var(--text-color);
+  letter-spacing: 0.02em;
+}
+
+#slideshow {
+  min-height: calc(var(--slideshow-size) * 2.35);
+  height: auto;
+  margin: var(--slideshow-margin-top) auto var(--slideshow-margin-bottom);
+  padding: 1.05rem 1.3rem;
+  width: min(96%, 1200px);
+  border: 1px solid rgba(255, 255, 255, 0.18);
   border-radius: var(--border-radius-large);
-  padding: 0.5rem;
-  border: 1px solid rgba(0, 212, 255, 0.2);
-  box-shadow: 0 4px 20px rgba(0, 212, 255, 0.1);
-}
-
-/* Theme toggle button */
-#theme-toggle {
-  background: linear-gradient(145deg, rgba(0, 212, 255, 0.15), rgba(255, 107, 157, 0.1));
-  border: 1px solid rgba(0, 212, 255, 0.3);
-  border-radius: 50%;
-  width: 48px;
-  height: 48px;
-  cursor: pointer;
+  background: linear-gradient(155deg, rgba(255, 255, 255, 0.08), rgba(255, 255, 255, 0.03));
+  box-shadow: var(--shadow-heavy);
+  color: var(--text-color);
+  font-size: var(--slideshow-size);
+  font-weight: 600;
+  line-height: 1.33;
+  letter-spacing: 0.01em;
+  text-align: center;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 1.2rem;
+  white-space: pre-line;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  backdrop-filter: blur(8px);
   transition: var(--theme-transition);
-  box-shadow: 0 2px 10px rgba(0, 212, 255, 0.2);
-  backdrop-filter: blur(5px);
 }
 
-#theme-toggle:hover {
-  transform: scale(1.1);
-  box-shadow: var(--shadow-medium);
+#slideshow:hover {
+  transform: translateY(-2px);
 }
 
-#theme-toggle:focus {
-  outline: var(--focus-outline);
-  outline-offset: var(--focus-outline-offset);
+#background-image {
+  position: absolute;
+  inset: 0;
+  background-size: cover;
+  background-position: center;
+  opacity: 0.2;
+  z-index: 0;
 }
 
-/* Font size controls */
-#font-controls {
-  background: linear-gradient(145deg, rgba(0, 212, 255, 0.1), rgba(255, 107, 157, 0.05));
-  border: 1px solid rgba(0, 212, 255, 0.2);
-  border-radius: var(--border-radius);
-  padding: 0.5rem;
-  gap: 0.5rem;
-  box-shadow: 0 2px 10px rgba(0, 212, 255, 0.15);
+#geo-warning {
+  border: 1px solid rgba(255, 204, 0, 0.5);
+  backdrop-filter: blur(4px);
+}
+
+#admin-panel {
+  position: fixed;
+  inset: 0;
+  background: rgba(3, 8, 14, 0.78);
+  color: #fff;
+  display: none;
+  flex-direction: column;
+  z-index: 2000;
+  direction: ltr !important;
+  text-align: left !important;
+  backdrop-filter: blur(8px);
+}
+
+#admin-panel.active {
+  display: flex;
+}
+
+#admin-form {
+  width: min(94vw, 1200px);
+  max-height: 92vh;
+  margin: auto;
+  overflow-y: auto;
+  padding: 1.05rem;
+  border-radius: 0.8rem;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  background: linear-gradient(160deg, rgba(10, 24, 38, 0.98), rgba(8, 18, 30, 0.96));
+  box-shadow: var(--shadow-heavy);
+  direction: ltr !important;
+  text-align: left !important;
+  display: grid;
+  gap: 0.9rem;
+}
+
+.admin-tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.45rem;
+  padding: 0.4rem 0.2rem;
+  border-radius: 0.7rem;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  backdrop-filter: blur(6px);
+}
+
+.admin-tab {
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  background: rgba(6, 16, 28, 0.75);
+  color: #cfe7ff;
+  padding: 0.32rem 0.7rem;
+  border-radius: 999px;
+  font-size: 0.8rem;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  cursor: pointer;
   transition: var(--theme-transition);
-  backdrop-filter: blur(5px);
 }
 
-#font-controls button {
+.admin-tab:hover {
+  border-color: rgba(110, 197, 255, 0.5);
+  color: #fff;
+}
+
+.admin-tab.active {
+  background: linear-gradient(135deg, rgba(95, 210, 255, 0.95), rgba(84, 155, 255, 0.92));
+  color: #06111d;
+  border-color: transparent;
+  box-shadow: 0 8px 18px rgba(0, 0, 0, 0.2);
+}
+
+.admin-section {
+  display: none;
+}
+
+.admin-section.active {
+  display: grid;
+  gap: 0.9rem;
+}
+
+#admin-form h2 {
+  margin-top: 0;
+  margin-bottom: 0.85rem;
+}
+
+#admin-form h3 {
+  margin: 0.4rem 0 0;
+  font-size: 0.98rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #cfe7ff;
+  padding: 0.35rem 0.6rem;
+  border-radius: 0.55rem;
+  background: linear-gradient(120deg, rgba(22, 54, 84, 0.8), rgba(12, 28, 44, 0.6));
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.admin-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.78rem 0.9rem;
+  margin: 0;
+  padding: 0.7rem 0.8rem;
+  border-radius: 0.65rem;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.admin-row label,
+.admin-col {
+  flex: 1 1 220px;
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+  font-size: 0.88rem;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.85);
+}
+
+.admin-row input[type="text"],
+.admin-row input[type="number"],
+.admin-row input[type="file"],
+.admin-row select,
+.admin-row textarea {
+  padding: 0.52rem 0.6rem;
+  font-size: 0.94rem;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  border-radius: 0.5rem;
+  background: rgba(6, 16, 28, 0.72);
+  color: #f2f7ff;
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.02);
+}
+
+#admin-panel select,
+#admin-panel select option {
+  background: #0b1e30;
+  color: #fff;
+}
+
+.admin-row textarea {
+  resize: vertical;
+  min-height: 4.2rem;
+}
+
+.admin-row label[style*="align-items:center"],
+.admin-col {
+  gap: 0.4rem;
+  font-weight: 600;
+}
+
+.admin-row input[type="checkbox"] {
+  accent-color: var(--accent-color);
+}
+
+.admin-buttons {
+  margin-top: 0.95rem;
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.62rem;
+  position: sticky;
+  bottom: 0;
+  padding: 0.6rem 0.4rem 0.9rem;
+  background: linear-gradient(180deg, rgba(10, 24, 38, 0) 0%, rgba(10, 24, 38, 0.95) 50%, rgba(10, 24, 38, 0.98) 100%);
+  z-index: 2;
+}
+
+.admin-buttons button,
+#preset-deltebre {
+  border: 0;
+  border-radius: 0.4rem;
+  padding: 0.48rem 0.85rem;
+  cursor: pointer;
+  font-size: 0.92rem;
+}
+
+.admin-row button {
+  border: 0;
+  border-radius: 0.4rem;
+  padding: 0.48rem 0.85rem;
+  cursor: pointer;
+  font-size: 0.9rem;
+  background: #334155;
+  color: #fff;
+}
+
+.admin-row button:hover {
+  filter: brightness(1.05);
+}
+
+button.save {
   background: var(--accent-color);
-  border: none;
-  border-radius: var(--border-radius);
-  color: white;
-  width: 32px;
-  height: 32px;
-  cursor: pointer;
-  font-size: 1rem;
-  transition: var(--theme-transition);
+  color: #04101b;
 }
 
-#font-controls button:hover {
-  transform: scale(1.1);
+button.cancel {
+  background: #5b6370;
+  color: #fff;
 }
 
-#font-controls button:focus {
-  outline: var(--focus-outline);
-  outline-offset: var(--focus-outline-offset);
+button.reset {
+  background: #9d3030;
+  color: #fff;
 }
 
-/* Share button within settings controls */
-#settings-controls #share-btn {
-  background: linear-gradient(145deg, rgba(78, 205, 196, 0.15), rgba(255, 107, 157, 0.1));
-  border: 1px solid rgba(78, 205, 196, 0.3);
-  border-radius: 50%;
-  width: 48px;
-  height: 48px;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 1.2rem;
-  transition: var(--theme-transition);
-  box-shadow: 0 2px 10px rgba(78, 205, 196, 0.2);
-  backdrop-filter: blur(5px);
+.schedule-container {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  padding: var(--gap);
+  display: none;
 }
 
-#settings-controls #share-btn:hover {
-  transform: scale(1.1);
-  box-shadow: var(--shadow-medium);
+.schedule-table {
+  width: 100%;
+  border-collapse: collapse;
+  table-layout: fixed;
+  color: var(--text-color);
 }
 
-#settings-controls #share-btn:focus {
-  outline: var(--focus-outline);
-  outline-offset: var(--focus-outline-offset);
+.schedule-table th,
+.schedule-table td {
+  border: 1px solid var(--card-border);
+  padding: 0.35rem;
+  text-align: center;
+  font-size: 0.9rem;
+  white-space: nowrap;
 }
 
-/* Progress indicator for prayer time countdown */
+.schedule-table th {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  background: rgba(8, 20, 32, 0.95);
+  color: var(--accent-color);
+}
+
+.schedule-table tbody tr:nth-child(odd) {
+  background: rgba(255, 255, 255, 0.03);
+}
+
+.schedule-table tbody tr:nth-child(even) {
+  background: rgba(255, 255, 255, 0.06);
+}
+
 .progress-ring {
   position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  border-radius: var(--border-radius);
+  inset: 0;
+  border-radius: inherit;
   overflow: hidden;
 }
 
 .progress-ring::before {
-  content: '';
+  content: "";
   position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: linear-gradient(90deg, transparent, var(--accent-color), transparent);
-  opacity: 0.3;
+  inset: 0;
+  background: linear-gradient(90deg, transparent, rgba(110, 197, 255, 0.22), transparent);
   animation: progress-pulse 2s ease-in-out infinite;
 }
 
-/* Only show progress animation on the next prayer card */
 .prayer-card:not(.next) .progress-ring::before {
   animation: none;
   opacity: 0.1;
 }
 
 @keyframes progress-pulse {
-  0%, 100% { opacity: 0.1; }
-  50% { opacity: 0.4; }
+  0%, 100% { opacity: 0.08; }
+  50% { opacity: 0.34; }
 }
 
-/* Enhanced card animations */
-.prayer-card {
-  position: relative;
-  overflow: hidden;
+@keyframes flash-border {
+  0%, 100% { border-color: var(--accent-color); }
+  50% { border-color: #ff6f6f; }
 }
 
-.prayer-card::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: -100%;
-  width: 100%;
-  height: 100%;
-  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
-  transition: left 0.5s ease-in-out;
+.prayer-card.flash {
+  animation: flash-border 1s linear infinite;
 }
 
-.prayer-card:hover::before {
-  left: 100%;
-}
-
-/* Improved admin panel styling */
-#admin-panel {
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
-}
-
-.admin-row {
-  transition: var(--theme-transition);
-}
-
-.admin-row:hover {
-  background: rgba(255, 255, 255, 0.05);
+.prayer-notification {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 2100;
+  padding: 1rem;
   border-radius: var(--border-radius);
-  padding: 0.5rem;
-  margin: -0.5rem;
+  border: 1px solid rgba(110, 197, 255, 0.55);
+  background: linear-gradient(145deg, rgba(8, 21, 34, 0.96), rgba(12, 29, 45, 0.95));
+  box-shadow: var(--shadow-heavy);
+  text-align: center;
+  animation: notification-pulse 1.8s ease-in-out infinite;
 }
 
-/* Enhanced form controls */
-input, select, textarea {
-  border-radius: var(--border-radius);
-  border: 1px solid var(--card-border);
-  background: var(--card-bg);
-  color: var(--text-color);
-  transition: var(--theme-transition);
+@keyframes notification-pulse {
+  0%, 100% { transform: translate(-50%, -50%) scale(1); }
+  50% { transform: translate(-50%, -50%) scale(1.03); }
 }
 
-input:focus, select:focus, textarea:focus {
-  border-color: var(--accent-color);
-  box-shadow: 0 0 0 2px rgba(0, 188, 212, 0.2);
-}
+body.rtl { direction: rtl; }
+body.rtl header { flex-direction: row-reverse; }
+body.rtl .header-left { text-align: right; }
+body.rtl #digital-clock { text-align: left; }
+body.rtl footer #next-event { margin-left: 1rem; margin-right: 0; }
 
-/* ARIA labels and screen reader support */
 .sr-only {
   position: absolute;
   width: 1px;
@@ -410,13 +980,11 @@ input:focus, select:focus, textarea:focus {
   border: 0;
 }
 
-/* Disable animations when no-animations class is present */
 .no-animations * {
   animation: none !important;
   transition: none !important;
 }
 
-/* Disable hover effects when no-hover-effects class is present */
 .no-hover-effects .prayer-card:hover,
 .no-hover-effects #admin-btn:hover,
 .no-hover-effects #theme-toggle:hover,
@@ -426,809 +994,105 @@ input:focus, select:focus, textarea:focus {
   box-shadow: none !important;
 }
 
-.no-hover-effects .prayer-card::before {
-  display: none !important;
-}
+.no-loading-states .loading::after { display: none !important; }
+.no-accessibility .skip-link { display: none !important; }
+.no-progress-indicator .progress-ring { display: none !important; }
 
-/* Disable loading states when no-loading-states class is present */
-.no-loading-states .loading::after {
-  display: none !important;
-}
-
-/* Hide accessibility elements when no-accessibility class is present */
-.no-accessibility .skip-link {
-  display: none !important;
-}
-
-/* Hide progress indicators when no-progress-indicator class is present */
-.no-progress-indicator .progress-ring {
-  display: none !important;
-}
-
-body {
-  margin: 0;
-  padding: 0;
-  background-color: var(--background-color);
-  color: var(--text-color);
-  font-family: var(--font-family);
-  display: flex;
-  flex-direction: column;
-  height: 100vh;
-  overflow: hidden;
-}
-
-.app-container {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  position: relative;
-  min-height: 0; /* Allow container to shrink */
-  overflow: hidden; /* Prevent horizontal overflow */
-}
-
-header {
-  display: flex;
-  /* Space the left group, logo and right group evenly across the header */
-  justify-content: space-between;
-  /* Center items vertically so the logo sits midway between the name and clock */
-  align-items: center;
-  padding: var(--header-padding);
-  position: relative;
-  z-index: 2;
-  background: var(--gradient-header);
-  backdrop-filter: blur(5px);
-  border-bottom: 2px solid rgba(0, 212, 255, 0.4);
-  box-shadow: 0 4px 20px rgba(0, 212, 255, 0.2);
-}
-
-.header-left {
-  display: flex;
-  flex-direction: column;
-  max-width: 60%;
-}
-
-#mosque-name {
-  font-size: 1.8rem;
-  font-weight: bold;
-  line-height: 1.2;
-  background: linear-gradient(135deg, var(--accent-color), var(--accent-secondary));
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-}
-
-#date-line {
-  font-size: 1rem;
-  color: var(--muted-color);
-}
-
-.header-right {
-  text-align: right;
-  display: flex;
-  flex-direction: column;
-  align-items: flex-end;
-}
-
-/* Weather display container in the header. When stale, it uses the
-   --weather-stale-color. Otherwise it uses --weather-normal-color. */
-#weather-display {
-  margin-top: 0.25rem;
-  display: flex;
-  align-items: center;
-  font-size: var(--weather-font-size);
-  color: var(--weather-normal-color);
-  gap: 0.25rem;
-  flex-wrap: wrap;
-  max-width: 100%;
-}
-
-#weather-display.stale {
-  color: var(--weather-stale-color);
-}
-
-#weather-display img {
-  height: var(--weather-icon-size);
-  width: auto;
-  display: inline-block;
-}
-
-/* Emoji icon for weather conditions (auto-detected). Sized similarly to the
-   weather icon. */
-#weather-display .weather-emoji {
-  font-size: var(--weather-icon-size);
-  line-height: var(--weather-icon-size);
-  display: inline-block;
-}
-
-/* Enhanced weather features */
-.weather-forecast {
-  display: flex;
-  gap: 0.5rem;
-  margin-top: 0.5rem;
-  padding: 0.5rem;
-  background: linear-gradient(145deg, rgba(0, 212, 255, 0.1), rgba(255, 107, 157, 0.05));
-  border: 1px solid rgba(0, 212, 255, 0.2);
-  border-radius: var(--border-radius);
-  font-size: var(--weather-forecast-size);
-  flex-wrap: wrap;
-  backdrop-filter: blur(5px);
-}
-
-.weather-forecast-day {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 0.25rem;
-  min-width: 3rem;
-}
-
-.weather-alert {
-  color: var(--weather-alert-color);
-  font-weight: bold;
-  animation: pulse 2s infinite;
-  text-shadow: 0 0 10px rgba(255, 107, 107, 0.5);
-}
-
-.weather-air-quality {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.25rem;
-  padding: 0.25rem 0.5rem;
-  border-radius: var(--border-radius);
-  font-size: 0.8rem;
-  backdrop-filter: blur(5px);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
-}
-
-.weather-air-quality.good {
-  background: var(--weather-air-quality-good);
-  color: white;
-}
-
-.weather-air-quality.moderate {
-  background: var(--weather-air-quality-moderate);
-  color: white;
-}
-
-.weather-air-quality.poor {
-  background: var(--weather-air-quality-poor);
-  color: white;
-}
-
-@keyframes pulse {
-  0%, 100% { opacity: 1; }
-  50% { opacity: 0.5; }
-}
-
-/* Prayer Time Enhancements */
-.qibla-indicator {
-  position: fixed;
-  bottom: 7rem;
-  left: 1rem;
-  background: linear-gradient(145deg, rgba(255, 107, 157, 0.15), rgba(0, 212, 255, 0.1));
-  border: 1px solid rgba(255, 107, 157, 0.3);
-  border-radius: 50%;
-  width: 60px;
-  height: 60px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 1.5rem;
-  z-index: 1000;
-  transition: var(--theme-transition);
-  box-shadow: 0 2px 15px rgba(255, 107, 157, 0.2);
-  backdrop-filter: blur(5px);
-}
-
-.qibla-indicator:hover {
-  transform: scale(1.1);
-  box-shadow: var(--shadow-medium);
-}
-
-.qibla-arrow {
-  width: 0;
-  height: 0;
-  border-left: 8px solid transparent;
-  border-right: 8px solid transparent;
-  border-bottom: 20px solid var(--accent-secondary);
-  transition: transform 0.3s ease;
-  filter: drop-shadow(0 2px 4px rgba(255, 107, 157, 0.3));
-}
-
-.prayer-notification {
-  position: fixed;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  background: linear-gradient(145deg, rgba(26, 26, 46, 0.95), rgba(22, 33, 62, 0.95));
-  border: 2px solid var(--accent-color);
-  border-radius: var(--border-radius);
-  padding: 1rem;
-  z-index: 2000;
-  box-shadow: 0 8px 32px rgba(0, 212, 255, 0.3);
-  text-align: center;
-  animation: notification-pulse 2s infinite;
-  backdrop-filter: blur(15px);
-}
-
-@keyframes notification-pulse {
-  0%, 100% { transform: translate(-50%, -50%) scale(1); }
-  50% { transform: translate(-50%, -50%) scale(1.05); }
-}
-
-/* Admin toggle button in the header */
-#admin-btn {
-  margin-top: 0.25rem;
-  background: none;
-  border: 1px solid var(--card-border);
-  border-radius: 0.25rem;
-  color: var(--muted-color);
-  padding: 0.25rem 0.5rem;
-  cursor: pointer;
-  font-size: 0.8rem;
-}
-#admin-btn:hover {
-  color: var(--accent-color);
-  border-color: var(--accent-color);
-}
-
-#digital-clock {
-  font-size: var(--clock-size);
-  font-weight: bold;
-  letter-spacing: 0.05em;
-  font-variant-numeric: tabular-nums;
-  /* Force left-to-right direction for the digital clock to prevent bidi
-     reordering of the time string in RTL languages */
-  direction: ltr;
-  unicode-bidi: embed;
-  margin-left: 0.5rem;
-}
-
-#location-label {
-  font-size: 0.9rem;
-  color: var(--muted-color);
-}
-
-.logo {
-  /* Use CSS variable for logo height so it can be customised in settings. Width
-     auto preserves aspect ratio. */
-  height: var(--logo-height);
-  width: auto;
-  margin-right: 0.5rem;
-}
-
-#cards-container {
-  flex: 1;
-  display: grid;
-  grid-auto-rows: var(--card-height);
-  grid-template-columns: repeat(auto-fit, minmax(min(var(--card-max-width), 100%), 1fr));
-  gap: calc(var(--gap) * 1.2);
-  align-content: start;
-  padding: calc(var(--gap) * 1.5);
-  overflow-y: auto;
-  box-sizing: border-box;
-  position: relative;
-}
-
-.prayer-card {
-  background: var(--gradient-card);
-  border: 1px solid var(--card-border);
-  border-radius: var(--border-radius-card);
-  padding: 0.75rem 1rem;
-  position: relative;
-  display: flex;
-  flex-direction: column;
-  /* Center content within cards so the text fills the available space when cards are extended */
-  justify-content: center;
-  /* Align items centrally horizontally but allow the iqamah line to flow separately */
-  align-items: center;
-  transition: all var(--transition-duration) var(--transition-timing);
-  box-shadow: var(--shadow-card);
-  backdrop-filter: blur(5px);
-  overflow: hidden;
-}
-
-.prayer-card::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: linear-gradient(45deg, transparent, rgba(0, 212, 255, 0.1), transparent);
-  opacity: 0;
-  transition: opacity var(--transition-duration) var(--transition-timing);
-  pointer-events: none;
-}
-
-.prayer-card:hover {
-  transform: translateY(-2px);
-  box-shadow: var(--shadow-card-hover);
-  background: var(--gradient-card-hover);
-}
-
-.prayer-card:hover::before {
-  opacity: 1;
-}
-
-.prayer-card.next {
-  border-color: var(--accent-color);
-  box-shadow: 0 0 25px var(--accent-color), 0 0 50px rgba(255, 107, 157, 0.3);
-  animation: next-glow 2s ease-in-out infinite alternate;
-  background: linear-gradient(145deg, rgba(0, 212, 255, 0.15), rgba(255, 107, 157, 0.08));
-}
-
-.prayer-card.next::after {
-  content: '';
-  position: absolute;
-  top: -2px;
-  left: -2px;
-  right: -2px;
-  bottom: -2px;
-  background: linear-gradient(45deg, var(--accent-color), var(--accent-secondary), var(--accent-tertiary));
-  border-radius: var(--border-radius-card);
-  z-index: -1;
-  opacity: 0.4;
-  animation: border-glow 3s ease-in-out infinite;
-}
-
-@keyframes next-glow {
-  0% {
-    box-shadow: 0 0 25px var(--accent-color), 0 0 50px rgba(255, 107, 157, 0.3);
+@media (max-width: 980px) {
+  :root {
+    --clock-size: 1.7rem;
+    --slideshow-size: 1.75rem;
+    --footer-height: 3rem;
   }
-  100% {
-    box-shadow: 0 0 35px var(--accent-color), 0 0 70px rgba(255, 107, 157, 0.5);
+
+  header {
+    gap: 0.6rem;
   }
-}
 
-@keyframes border-glow {
-  0%, 100% {
-    opacity: 0.3;
+  #cards-container {
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
   }
-  50% {
-    opacity: 0.6;
-  }
-}
 
-.prayer-name {
-  /* Scale name font size relative to card height but clamp to sensible range.
-     Increase the scaling factor so the name occupies more vertical space as
-     cards get taller. */
-  font-size: clamp(1.2rem, calc(var(--card-height) * var(--card-name-scale)), 3.5rem);
-  font-weight: bold;
-  margin-bottom: 0.3rem;
-  text-align: center;
-  white-space: nowrap;
-  overflow: hidden;
-  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
-  letter-spacing: 0.02em;
-}
-
-.prayer-time {
-  /* Scale time font size relative to card height but clamp to sensible range.
-     Increase the scaling factor to let the time fill more of the card when
-     available height is large. */
-  font-size: clamp(1.6rem, calc(var(--card-height) * var(--card-time-scale)), 5rem);
-  font-variant-numeric: tabular-nums;
-  text-align: center;
-  white-space: nowrap;
-  overflow: hidden;
-  /* Force left-to-right display of numeric time even in RTL layouts to
-     prevent bidi reordering or unintended line breaks. */
-  direction: ltr;
-  unicode-bidi: embed;
-  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.15);
-  font-weight: 600;
-  letter-spacing: 0.05em;
-}
-
-.prayer-iqamah {
-  /* Scale iqamah font size relative to card height but clamp to a smaller range.
-     Increase scaling to ensure the optional iqamah text remains proportional
-     when cards are extended. */
-  font-size: clamp(0.9rem, calc(var(--card-height) * var(--card-iqamah-scale)), 2rem);
-  color: var(--muted-color);
-  /* Only apply top margin when there's actual iqamah text; otherwise this element
-     will be hidden via the :empty selector below to prevent unnecessary blank
-     space at the bottom of the card. */
-  margin-top: 0.25rem;
-  text-align: center;
-  /* Force left-to-right direction for numeric parts to avoid issues in RTL. */
-  direction: ltr;
-  unicode-bidi: embed;
-}
-
-/* When the iqamah text is empty, hide the element and remove its margin. This
-   prevents blank vertical space on cards without a set iqamah time. */
-.prayer-iqamah:empty {
-  display: none;
-  margin-top: 0;
-}
-
-footer {
-  height: var(--footer-height);
-  padding: 0 1rem;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  border-top: 1px solid rgba(0, 212, 255, 0.2);
-  background: var(--gradient-footer);
-  backdrop-filter: blur(15px);
-  position: relative;
-  z-index: 2;
-  box-shadow: 0 -4px 30px rgba(0, 212, 255, 0.1);
-}
-
-#next-event {
-  /* Make the next event text more prominent */
-  font-size: var(--next-event-size);
-  font-weight: bold;
-  color: var(--accent-color);
-  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
-  background: linear-gradient(135deg, var(--accent-color), var(--accent-secondary));
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-  animation: text-pulse 2s ease-in-out infinite;
-}
-
-@keyframes text-pulse {
-  0%, 100% {
-    opacity: 1;
-  }
-  50% {
-    opacity: 0.8;
-  }
-}
-
-#ticker {
-  /* Layout and positioning */
-  flex: 1;
-  margin-right: 2rem;
-  position: relative;
-  display: flex;
-  align-items: center;
-  
-  /* Overflow and text handling */
-  overflow: hidden;
-  white-space: nowrap;
-  width: 100%;
-}
-
-/* Each individual segment of the ticker. Two copies will be appended in JS to
-   create a seamless loop. Extra right padding adds a gap between repetitions. */
-.ticker-slide {
-  display: inline-block;
-  padding-right: 2rem;
-  color: var(--text-color);
-  font-size: var(--ticker-size);
-  line-height: 1.2;
-}
-
-/* Wrapper around the duplicated ticker slides.  It retains an auto width so
-   that JavaScript can measure its full size.  We keep it as inline-flex to
-   line up the slides horizontally and prevent wrapping. */
-.ticker-inner {
-  display: inline-flex;
-  white-space: nowrap;
-  align-items: center;
-}
-
-/* Animation for left‑to‑right languages (English, Spanish). Moves both copies
-   leftwards by half of their combined width so that the second copy
-   seamlessly follows the first. */
-@keyframes ticker-move-ltr {
-  0%   { transform: translateX(0); }
-  100% { transform: translateX(-50%); }
-}
-
-/* Animation for right‑to‑left languages (Arabic). Moves both copies
-   rightwards by half of their combined width to achieve continuous scroll. */
-@keyframes ticker-move-rtl {
-  0%   { transform: translateX(0); }
-  100% { transform: translateX(50%); }
-}
-
-/* Slideshow of phrases that appears prominently in the middle of the page. It uses
-   a simple fade effect when cycling phrases. */
-#slideshow {
-  /* Let the height grow automatically based on the text length while retaining a minimum height
-     that scales with the configured slideshow font size. This prevents long verses from
-     overflowing and allows multi‑line content. */
-  min-height: calc(var(--slideshow-size) * 3);
-  height: auto;
-  font-size: var(--slideshow-size);
-  color: var(--text-color);
-  display: flex;
-  /* The vertical alignment of the text within the slideshow can be configured via
-     JavaScript by changing the alignItems property on this element. It defaults to
-     center but will be overwritten based on user preference. */
-  align-items: center;
-  justify-content: center;
-  text-align: center;
-  /* Position prominently in the middle of the page with generous spacing */
-  margin: 2rem auto;
-  padding: 2rem;
-  width: 95%;
-  max-width: 1200px;
-  min-width: 300px;
-  opacity: 1;
-  transition: all var(--transition-duration) var(--transition-timing);
-  white-space: pre-line;
-  word-wrap: break-word;
-  overflow-wrap: break-word;
-  /* Enhanced visibility for better readability from far */
-  background: linear-gradient(145deg, rgba(0, 212, 255, 0.1), rgba(255, 107, 157, 0.05));
-  border-radius: var(--border-radius-large);
-  border: 1px solid rgba(0, 212, 255, 0.2);
-  box-shadow: var(--shadow-heavy);
-  backdrop-filter: blur(10px);
-  /* Enhanced typography for better readability */
-  font-weight: 500;
-  line-height: 1.4;
-  letter-spacing: 0.02em;
-  /* Subtle pulse animation to draw attention */
-  animation: slideshow-pulse 3s ease-in-out infinite;
-  position: relative;
-  overflow: hidden;
-}
-
-#slideshow::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: linear-gradient(45deg, transparent, rgba(0, 212, 255, 0.1), transparent);
-  opacity: 0;
-  transition: opacity var(--transition-duration) var(--transition-timing);
-  pointer-events: none;
-}
-
-#slideshow:hover::before {
-  opacity: 1;
-}
-
-/* Hover effect for slideshow to make it even more prominent */
-#slideshow:hover {
-  background: linear-gradient(145deg, rgba(0, 212, 255, 0.15), rgba(255, 107, 157, 0.08));
-  border-color: rgba(0, 212, 255, 0.3);
-  box-shadow: 0 8px 40px rgba(0, 212, 255, 0.2);
-  transform: translateY(-3px);
-  transition: all var(--transition-duration) var(--transition-timing);
-}
-
-/* Responsive design for slideshow on smaller screens */
-@media (max-width: 768px) {
   #slideshow {
-    width: 98%;
-    max-width: none;
-    margin: 1rem auto;
-    padding: 1.5rem;
-    font-size: calc(var(--slideshow-size) * 0.8);
+    width: 97%;
+    padding: 0.95rem 1rem;
+  }
+
+  #admin-form {
+    width: 96vw;
   }
 }
 
-/* Responsive design for slideshow on very small screens */
-@media (max-width: 480px) {
+@media (max-width: 700px) {
+  :root {
+    --card-height: 5.8rem;
+    --slideshow-size: 1.45rem;
+    --ticker-size: 0.9rem;
+  }
+
+  body {
+    overflow-y: auto;
+  }
+
+  header {
+    flex-wrap: wrap;
+    align-items: flex-start;
+  }
+
+  .header-left,
+  .header-right {
+    max-width: 100%;
+    width: 100%;
+    align-items: flex-start;
+    text-align: left;
+  }
+
+  #digital-clock {
+    margin-top: 0.2rem;
+  }
+
+  #cards-container {
+    gap: 0.65rem;
+    padding: 0.75rem;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
   #slideshow {
-    width: 99%;
-    margin: 0.5rem auto;
-    padding: 1rem;
-    font-size: calc(var(--slideshow-size) * 0.7);
-    min-height: calc(var(--slideshow-size) * 2);
+    min-height: calc(var(--slideshow-size) * 2.1);
+  }
+
+  #settings-toggle {
+    bottom: 4.2rem;
+  }
+
+  #settings-controls {
+    left: 0.8rem;
+    right: 0.8rem;
+    bottom: 7.2rem;
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+
+  .qibla-indicator {
+    bottom: 10.7rem;
   }
 }
 
-/* Subtle pulse animation for slideshow to draw attention */
-@keyframes slideshow-pulse {
-  0%, 100% {
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+@media (max-width: 460px) {
+  :root {
+    --clock-size: 1.45rem;
+    --card-height: 5.2rem;
   }
-  50% {
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3), 0 0 20px rgba(255, 255, 255, 0.1);
+
+  #cards-container {
+    grid-template-columns: 1fr;
   }
-}
 
-/* Legacy ticker animations - these are no longer used as we now use dynamic keyframes */
+  #next-event {
+    font-size: 1rem;
+  }
 
-/* Admin panel styles */
-#admin-panel {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: rgba(0, 0, 0, 0.8);
-  color: #fff;
-  display: none;
-  flex-direction: column;
-  z-index: 100;
-  /* Force LTR direction for admin panel regardless of main language */
-  direction: ltr !important;
-  text-align: left !important;
-}
-
-#admin-panel.active {
-  display: flex;
-}
-
-#admin-form {
-  background: #1e1e1e;
-  border-radius: 0.5rem;
-  padding: 1rem;
-  margin: auto;
-  max-height: 90vh;
-  width: 90vw;
-  overflow-y: auto;
-  box-sizing: border-box;
-  /* Force LTR direction for admin form */
-  direction: ltr !important;
-  text-align: left !important;
-}
-
-#admin-form h2 {
-  margin-top: 0;
-}
-
-/* Section headings within the admin form. These <h3> elements are used to
-   group related settings in the panel. They use the accent colour and a
-   bottom border to separate sections visually. */
-#admin-form h3 {
-  margin-top: 1rem;
-  margin-bottom: 0.5rem;
-  font-size: 1.2rem;
-  color: var(--accent-color);
-  border-bottom: 1px solid var(--card-border);
-  padding-bottom: 0.25rem;
-}
-
-.admin-row {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 1rem;
-  margin-bottom: 0.5rem;
-}
-
-.admin-row label {
-  flex: 1 1 200px;
-  display: flex;
-  flex-direction: column;
-  font-size: 0.9rem;
-}
-
-.admin-row input[type="text"],
-.admin-row input[type="number"],
-.admin-row input[type="file"],
-.admin-row select,
-.admin-row textarea {
-  padding: 0.4rem;
-  margin-top: 0.25rem;
-  font-size: 1rem;
-  background: #2b2b2b;
-  color: #fff;
-  border: 1px solid #555;
-  border-radius: 0.25rem;
-}
-
-.admin-row textarea {
-  resize: vertical;
-  height: 3rem;
-}
-
-.admin-buttons {
-  margin-top: 1rem;
-  display: flex;
-  justify-content: flex-end;
-  gap: 1rem;
-}
-
-.admin-buttons button {
-  padding: 0.5rem 1rem;
-  font-size: 1rem;
-  border: none;
-  border-radius: 0.25rem;
-  cursor: pointer;
-}
-
-button.save {
-  background: var(--accent-color);
-  color: #000;
-}
-
-button.cancel {
-  background: #555;
-  color: #fff;
-}
-
-button.reset {
-  background: #b71c1c;
-  color: #fff;
-}
-
-/* Flash effect for pre-iqamah alert */
-@keyframes flash-border {
-  0%, 100% { border-color: var(--accent-color); }
-  50% { border-color: #ff5252; }
-}
-
-.prayer-card.flash {
-  animation: flash-border 1s linear infinite;
-}
-
-/* Background image */
-#background-image {
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background-size: cover;
-  background-position: center;
-  opacity: 0.2;
-  z-index: 0;
-}
-
-body.rtl {
-  direction: rtl;
-}
-
-body.rtl header {
-  flex-direction: row-reverse;
-}
-
-body.rtl .header-left {
-  text-align: right;
-}
-
-body.rtl #digital-clock {
-  text-align: left;
-}
-
-body.rtl footer #next-event {
-  margin-right: 0;
-  margin-left: 1rem;
-}
-
-/* ---------------------------------------------------------------------------
-   Schedule view styles
-   The schedule view is used for weekly and monthly prayer schedules. It displays
-   a scrollable table beneath the header and replaces the card grid when
-   `viewMode` is set to 'week' or 'month'.
---------------------------------------------------------------------------- */
-.schedule-container {
-  flex: 1;
-  overflow-y: auto;
-  padding: var(--gap);
-  display: none; /* hidden by default; shown in week/month views */
-}
-.schedule-table {
-  width: 100%;
-  border-collapse: collapse;
-  table-layout: fixed;
-  color: var(--text-color);
-}
-.schedule-table th,
-.schedule-table td {
-  border: 1px solid var(--card-border);
-  padding: 0.3rem;
-  text-align: center;
-  font-size: 0.9rem;
-  white-space: nowrap;
-}
-.schedule-table th {
-  background: #1c1c1c;
-  color: var(--accent-color);
-  position: sticky;
-  top: 0;
-  z-index: 1;
-}
-.schedule-table tbody tr:nth-child(odd) {
-  background: #171717;
-}
-.schedule-table tbody tr:nth-child(even) {
-  background: #1e1e1e;
+  #ticker {
+    margin-right: 0.2rem;
+  }
 }
