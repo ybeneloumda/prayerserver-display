@@ -94,10 +94,7 @@ README:
     <div class="admin-tabs" role="tablist" aria-label="Settings sections">
       <button type="button" class="admin-tab active" data-tab="identity" role="tab" aria-selected="true">Identity</button>
       <button type="button" class="admin-tab" data-tab="location" role="tab">Location</button>
-      <button type="button" class="admin-tab" data-tab="calculation" role="tab">Calculation</button>
-      <button type="button" class="admin-tab" data-tab="iqamah" role="tab">Iqamah</button>
-      <button type="button" class="admin-tab" data-tab="friday" role="tab">Friday</button>
-      <button type="button" class="admin-tab" data-tab="ramadan" role="tab">Ramadan</button>
+      <button type="button" class="admin-tab" data-tab="schedule" role="tab">Schedule</button>
       <button type="button" class="admin-tab" data-tab="language" role="tab">Language</button>
       <button type="button" class="admin-tab" data-tab="ticker" role="tab">Ticker</button>
       <button type="button" class="admin-tab" data-tab="weather" role="tab">Weather</button>
@@ -105,7 +102,6 @@ README:
       <button type="button" class="admin-tab" data-tab="layout" role="tab">Layout</button>
       <button type="button" class="admin-tab" data-tab="typography" role="tab">Typography</button>
       <button type="button" class="admin-tab" data-tab="ux" role="tab">UX/UI</button>
-      <button type="button" class="admin-tab" data-tab="presets" role="tab">Presets</button>
     </div>
     <div class="admin-section" data-tab-section="identity">
     <h3>Header &amp; Identity</h3>
@@ -191,12 +187,6 @@ README:
         <input type="text" id="admin-tz">
       </label>
     </div>
-
-    </div>
-
-    <div class="admin-section" data-tab-section="calculation">
-    <!-- Calculation Settings -->
-    <h3>Calculation Settings</h3>
     <div class="admin-row">
       <label>
         Calculation Method
@@ -221,10 +211,13 @@ README:
         </select>
       </label>
     </div>
+    <div class="admin-row">
+      <button type="button" id="preset-deltebre" style="background:#1976d2;color:#fff;padding:0.5rem 1rem;border:none;border-radius:0.25rem;cursor:pointer;">Quick Preset: Deltebre</button>
+    </div>
 
     </div>
 
-    <div class="admin-section" data-tab-section="iqamah">
+    <div class="admin-section" data-tab-section="schedule">
     <!-- Iqamah Settings -->
     <h3>Iqamah Settings</h3>
     <div class="admin-row">
@@ -244,9 +237,6 @@ README:
       </label>
     </div>
 
-    </div>
-
-    <div class="admin-section" data-tab-section="friday">
     <!-- Friday Mode -->
     <h3>Friday Mode</h3>
     <div class="admin-row">
@@ -263,9 +253,6 @@ README:
       </label>
     </div>
 
-    </div>
-
-    <div class="admin-section" data-tab-section="ramadan">
     <!-- Ramadan Mode -->
     <h3>Ramadan Mode</h3>
     <div class="admin-row">
@@ -510,6 +497,25 @@ README:
       </div>
     </div>
     <div class="admin-row">
+      <label style="display:flex;align-items:center;">
+        <input type="checkbox" id="admin-adhan-enabled" style="margin-right:0.5rem;"> Play Adhan With Notifications
+      </label>
+      <label>
+        Adhan Audio
+        <select id="admin-adhan-audio">
+          <option value="audio/adhan/Beautiful_adhan.ogg">Beautiful Adhan</option>
+          <option value="audio/adhan/Azan.ogg">Azan (Classic)</option>
+          <option value="audio/adhan/Adhan_wiki.oga">Adhan (Wiki)</option>
+          <option value="audio/adhan/Oracion_Al-Azzan.ogg">Oracion Al-Azzan</option>
+          <option value="audio/adhan/Prophet_Mosque_Adhan.ogg">Prophet Mosque Adhan</option>
+        </select>
+      </label>
+      <label>
+        Test Adhan
+        <button type="button" id="admin-adhan-test">Play Adhan</button>
+      </label>
+    </div>
+    <div class="admin-row">
       <label>Prayer Time Offsets (minutes, comma separated)</label>
       <input type="text" id="admin-prayer-offsets" placeholder="Fajr,Dhuhr,Asr,Maghrib,Isha">
     </div>
@@ -572,6 +578,23 @@ README:
       <label>
         Font Family
         <input type="text" id="admin-font-family" placeholder="e.g., 'Segoe UI', Arial, sans-serif">
+      </label>
+      <label>
+        Font Preset
+        <select id="admin-font-family-preset">
+          <option value="">Custom</option>
+          <option value="Noto Sans Arabic, Noto Naskh Arabic, Tahoma, Arial, sans-serif">Noto Sans Arabic</option>
+          <option value="Noto Naskh Arabic, Tahoma, Arial, sans-serif">Noto Naskh Arabic</option>
+          <option value="Noto Sans, Arial, sans-serif">Noto Sans</option>
+          <option value="Segoe UI, Tahoma, Arial, sans-serif">Segoe UI</option>
+          <option value="Tahoma, Arial, sans-serif">Tahoma</option>
+          <option value="Arial, Helvetica, sans-serif">Arial</option>
+          <option value="Verdana, Arial, sans-serif">Verdana</option>
+          <option value="'Trebuchet MS', Arial, sans-serif">Trebuchet</option>
+          <option value="Georgia, 'Times New Roman', serif">Georgia</option>
+          <option value="'Times New Roman', Times, serif">Times New Roman</option>
+          <option value="'Courier New', Courier, monospace">Courier New</option>
+        </select>
       </label>
       <label>
         Clock Size (rem)
@@ -649,13 +672,6 @@ README:
 
     </div>
 
-    <div class="admin-section" data-tab-section="presets">
-    <!-- Presets & Reset -->
-    <h3>Presets &amp; Reset</h3>
-    <div class="admin-row">
-      <button type="button" id="preset-deltebre" style="background:#1976d2;color:#fff;padding:0.5rem 1rem;border:none;border-radius:0.25rem;cursor:pointer;">Quick Preset: Deltebre</button>
-    </div>
-    </div>
     <div class="admin-buttons">
       <button type="button" class="save">Save</button>
       <button type="button" class="cancel">Cancel</button>

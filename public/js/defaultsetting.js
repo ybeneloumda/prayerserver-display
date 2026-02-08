@@ -92,6 +92,8 @@ let  defaultSettings = {
   , prayerTimeOffsets: {Fajr: 0, Dhuhr: 0, Asr: 0, Maghrib: 0, Isha: 0} // custom prayer time offsets
   , prayerSharing: false // enable prayer time sharing functionality
   , qiblaAngle: 0 // qibla direction angle in degrees
+  , adhanEnabled: true // play adhan when prayer notifications trigger
+  , adhanAudio: "audio/adhan/Beautiful_adhan.ogg" // built-in adhan audio file path
   // Friday mode: on Fridays replace Dhuhr with Jumu'ah card showing Khutbah and Prayer times.
   , fridayMode: false
   , jumuahKhutbahDelay: 0 // minutes after Dhuhr adhan to start Khutbah

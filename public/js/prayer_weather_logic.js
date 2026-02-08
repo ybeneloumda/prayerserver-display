@@ -17,6 +17,8 @@ let prayTime;
 let tickInterval;
 let recomputeTimeout;
 let nextEvent = null;
+let lastNotificationKey = null;
+let adhanTestAudio = null;
 
 // Global timer for rotating slideshow phrases and index tracker.
 let slideshowTimer = null;
@@ -658,8 +660,10 @@ function render() {
   
   // Set direction based on language
   if (settings.language === 'ar') {
+    document.documentElement.setAttribute('dir', 'rtl');
     document.body.classList.add('rtl');
   } else {
+    document.documentElement.setAttribute('dir', 'ltr');
     document.body.classList.remove('rtl');
   }
   
@@ -842,14 +846,12 @@ function render() {
     }
     // Create container for two copies of the message to achieve seamless looping
     ticker.innerHTML = '';
-    // Check for manual override first, then fall back to content-based detection
+    // Manual override: only force RTL when explicitly enabled; otherwise auto-detect
     let isRTL;
-    if (settings.tickerForceRTL !== undefined && settings.tickerForceRTL !== null) {
-      // Manual override is set - use it
-      isRTL = settings.tickerForceRTL;
+    if (settings.tickerForceRTL === true) {
+      isRTL = true;
       console.log('Ticker: Using manual RTL override:', isRTL);
     } else {
-      // No manual override - detect RTL based on text content
       isRTL = isRTLText(msg);
       console.log('Ticker: RTL detection - text content analysis, isRTL:', isRTL);
     }
@@ -861,8 +863,11 @@ function render() {
       const slide = document.createElement('div');
       slide.className = 'ticker-slide';
       slide.textContent = msg;
-      // Ensure the slide respects the direction for proper RTL display
-      slide.style.direction = ticker.style.direction;
+      // Allow mixed RTL/LTR content to render naturally inside the slide.
+      // Keep scrolling direction separate from text direction.
+      slide.setAttribute('dir', 'auto');
+      slide.style.unicodeBidi = 'plaintext';
+      slide.style.textAlign = 'start';
       return slide;
     };
     const first = makeSlide();
@@ -876,16 +881,23 @@ function render() {
       console.log('Ticker: Text width measured:', textWidth, 'px');
       // Use a base pixel per second speed; adjust duration based on content length
       const pxPerSec = 50;
-      // Total distance to travel is the width of one slide
-      const distance = textWidth + 20; // add small gap between repetitions
+      const tickerWidth = ticker.clientWidth || 0;
+      const gap = Math.max(40, (tickerWidth - textWidth) + 40);
+      inner.style.gap = `${gap}px`;
+      // Total distance is one full slide plus the gap between copies.
+      const distance = textWidth + gap;
       let duration = distance / pxPerSec;
       if (!isFinite(duration) || duration < 20) duration = 20;
       console.log('Ticker: Animation duration:', duration, 's, distance:', distance, 'px');
-      // Determine translation for LTR vs RTL: we move inner container leftward or rightward
-      // For RTL: text should start from right and move leftward
-      // For LTR: text should start from left and move leftward (standard behavior)
-      const fromX = isRTL ? distance : 0;
-      const toX = isRTL ? -distance : -distance;
+      // Determine translation for LTR vs RTL:
+      // LTR: start at left edge (0) and move left.
+      // RTL: start aligned to right edge and move right.
+      if (tickerWidth > 0 && textWidth < tickerWidth) {
+        inner.style.minWidth = `${tickerWidth}px`;
+        inner.style.justifyContent = isRTL ? 'flex-end' : 'flex-start';
+      }
+      const fromX = 0;
+      const toX = isRTL ? distance : -distance;
       console.log('Ticker: Animation values - fromX:', fromX, 'toX:', toX, 'isRTL:', isRTL);
       // Create or reuse the dynamic style element
       let styleEl = document.getElementById('ticker-dynamic-style');
@@ -896,6 +908,10 @@ function render() {
       }
       styleEl.textContent = `@keyframes ticker-loop { from { transform: translateX(${fromX}px); } to { transform: translateX(${toX}px); } }`;
       // Apply the animation to the inner container
+      inner.style.animation = 'none';
+      inner.style.transform = `translateX(${fromX}px)`;
+      // Force reflow so animation restarts from the correct position
+      void inner.offsetHeight;
       inner.style.animation = `ticker-loop ${duration}s linear infinite`;
       console.log('Ticker: Animation applied successfully');
     });
@@ -1151,7 +1167,7 @@ function updateClockAndCountdown() {
     
     // Check for prayer notifications
     if (settings.prayerNotifications && diff <= 0 && diff > -60000) { // Within 1 minute of prayer time
-      showPrayerNotification(prayerName);
+      showPrayerNotification(prayerName, nextEvent);
     }
     
     // Re-render cards to apply flash if necessary
@@ -1641,8 +1657,11 @@ function updateQiblaIndicator() {
 }
 
 // Show prayer notification
-function showPrayerNotification(prayerName) {
+function showPrayerNotification(prayerName, event) {
   if (!settings.prayerNotifications) return;
+  const keyBase = event && event.time ? `${event.prayer || prayerName}-${event.type || 'adhan'}-${event.time}` : `${prayerName}-${Date.now()}`;
+  if (lastNotificationKey === keyBase) return;
+  lastNotificationKey = keyBase;
   
   const notification = document.createElement('div');
   notification.className = 'prayer-notification';
@@ -1652,6 +1671,18 @@ function showPrayerNotification(prayerName) {
   `;
   
   document.body.appendChild(notification);
+
+  // Play adhan audio if provided
+  if (settings.adhanEnabled && settings.adhanAudio) {
+    try {
+      const audio = new Audio(settings.adhanAudio);
+      audio.play().catch(err => {
+        console.warn('Adhan audio play blocked:', err);
+      });
+    } catch (e) {
+      console.warn('Adhan audio error:', e);
+    }
+  }
   
   // Remove notification after 10 seconds
   setTimeout(() => {
@@ -2027,6 +2058,11 @@ function populateAdminForm() {
   // Typography fields
   const ff = document.getElementById('admin-font-family');
   if (ff) ff.value = settings.fontFamily;
+  const ffPreset = document.getElementById('admin-font-family-preset');
+  if (ffPreset) {
+    const match = Array.from(ffPreset.options).some(opt => opt.value === settings.fontFamily);
+    ffPreset.value = match ? settings.fontFamily : '';
+  }
   const cs = document.getElementById('admin-clock-size');
   if (cs) cs.value = settings.clockSize;
   const ns = document.getElementById('admin-next-size');
@@ -2043,6 +2079,12 @@ function populateAdminForm() {
   if (sTop) sTop.value = settings.slideshowMarginTop;
   const sBottom = document.getElementById('admin-slideshow-bottom');
   if (sBottom) sBottom.value = settings.slideshowMarginBottom;
+  const adhanEnabledEl = document.getElementById('admin-adhan-enabled');
+  if (adhanEnabledEl) adhanEnabledEl.checked = settings.adhanEnabled !== false;
+  const adhanSelect = document.getElementById('admin-adhan-audio');
+  if (adhanSelect && settings.adhanAudio) {
+    adhanSelect.value = settings.adhanAudio;
+  }
 
   // Set the slideshow vertical alignment select. Map the settings value (e.g.,
   // 'flex-start', 'center', 'flex-end') directly.
@@ -2267,6 +2309,38 @@ function setupAdminHandlers() {
       translateAdminPanel();
     });
   }
+  const adhanTestBtn = document.getElementById('admin-adhan-test');
+  const adhanSelect = document.getElementById('admin-adhan-audio');
+  if (adhanTestBtn && adhanSelect) {
+    adhanTestBtn.addEventListener('click', () => {
+      const src = adhanSelect.value;
+      if (!src) return;
+      if (adhanTestAudio && !adhanTestAudio.paused) {
+        adhanTestAudio.pause();
+        adhanTestAudio.currentTime = 0;
+        adhanTestBtn.textContent = 'Play Adhan';
+        return;
+      }
+      adhanTestAudio = new Audio(src);
+      adhanTestBtn.textContent = 'Stop Adhan';
+      adhanTestAudio.play().catch(err => {
+        console.warn('Adhan test play blocked:', err);
+        adhanTestBtn.textContent = 'Play Adhan';
+      });
+      adhanTestAudio.addEventListener('ended', () => {
+        adhanTestBtn.textContent = 'Play Adhan';
+      }, { once: true });
+    });
+  }
+  const fontPresetSelect = document.getElementById('admin-font-family-preset');
+  const fontInput = document.getElementById('admin-font-family');
+  if (fontPresetSelect && fontInput) {
+    fontPresetSelect.addEventListener('change', () => {
+      if (fontPresetSelect.value) {
+        fontInput.value = fontPresetSelect.value;
+      }
+    });
+  }
   document.querySelector('.save').addEventListener('click', () => {
     settings.serverIp = document.getElementById('admin-server-ip').value.trim() || 'prayerserver';
     settings.serverPort = document.getElementById('admin-server-port').value.trim() || '80';
@@ -2387,6 +2461,8 @@ function setupAdminHandlers() {
     settings.prayerNotifications = document.getElementById('admin-prayer-notifications').checked;
     settings.qiblaDirection = document.getElementById('admin-qibla-direction').checked;
     settings.prayerSharing = document.getElementById('admin-prayer-sharing').checked;
+    settings.adhanEnabled = document.getElementById('admin-adhan-enabled').checked;
+    settings.adhanAudio = document.getElementById('admin-adhan-audio').value || defaultSettings.adhanAudio;
     
     // Parse prayer time offsets
     const offsetsString = document.getElementById('admin-prayer-offsets').value;

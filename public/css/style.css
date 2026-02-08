@@ -59,25 +59,85 @@
   --gradient-footer: linear-gradient(145deg, rgba(7, 17, 27, 0.96), rgba(9, 22, 35, 0.9));
 
   --theme-transition: all var(--transition-duration) var(--transition-timing);
+
+  --next-prayer-badge-bg: linear-gradient(135deg, rgba(95, 210, 255, 0.95), rgba(84, 155, 255, 0.92));
+  --next-prayer-badge-text: #06111d;
+  --next-event-bg: linear-gradient(135deg, rgba(12, 30, 46, 0.85), rgba(8, 18, 30, 0.9));
+  --next-event-border: 1px solid rgba(255, 255, 255, 0.12);
+  --next-event-text: var(--text-color);
+  --next-event-badge-bg: linear-gradient(135deg, rgba(255, 212, 140, 0.95), rgba(217, 179, 111, 0.92));
+  --next-event-badge-text: #1c1608;
+  --next-card-bg: linear-gradient(150deg, rgba(34, 24, 6, 0.92), rgba(14, 22, 34, 0.9));
+  --next-card-border: rgba(255, 206, 123, 0.75);
+  --next-card-text: #f6f2e9;
+  --next-card-muted: #d9c9ad;
+
+  --panel-overlay: rgba(3, 8, 14, 0.78);
+  --panel-bg: linear-gradient(160deg, rgba(10, 24, 38, 0.98), rgba(8, 18, 30, 0.96));
+  --panel-text: #f2f7ff;
+  --panel-muted: rgba(255, 255, 255, 0.85);
+  --panel-surface: rgba(255, 255, 255, 0.04);
+  --panel-border: rgba(255, 255, 255, 0.08);
+  --panel-input-bg: rgba(6, 16, 28, 0.72);
+  --panel-input-text: #f2f7ff;
+  --panel-select-bg: #0b1e30;
+  --panel-tab-bg: linear-gradient(145deg, rgba(9, 22, 36, 0.9), rgba(7, 18, 30, 0.78));
+  --panel-tab-text: #cfe7ff;
+  --panel-tab-active-bg: linear-gradient(135deg, rgba(95, 210, 255, 0.98), rgba(84, 155, 255, 0.92));
+  --panel-tab-active-text: #06111d;
+  --panel-heading-bg: linear-gradient(120deg, rgba(22, 54, 84, 0.8), rgba(12, 28, 44, 0.6));
+  --panel-heading-text: #cfe7ff;
+  --panel-sticky-bg: linear-gradient(180deg, rgba(10, 24, 38, 0) 0%, rgba(10, 24, 38, 0.95) 50%, rgba(10, 24, 38, 0.98) 100%);
+  --table-head-bg: rgba(8, 20, 32, 0.95);
 }
 
 [data-theme="light"] {
-  --background-color: #edf3fb;
-  --background-gradient: radial-gradient(1200px 800px at 8% 8%, rgba(70, 130, 200, 0.18), transparent 56%), radial-gradient(900px 640px at 90% 14%, rgba(218, 170, 96, 0.2), transparent 56%), linear-gradient(155deg, #e7eef8 0%, #f6f9fd 42%, #e9f2fb 100%);
-  --card-bg: linear-gradient(165deg, rgba(255, 255, 255, 0.92), rgba(251, 253, 255, 0.74));
-  --card-border: rgba(28, 64, 99, 0.16);
-  --accent-color: #1768ac;
-  --accent-secondary: #a87720;
-  --accent-tertiary: #188767;
-  --text-color: #12253b;
-  --muted-color: #45627e;
-  --gradient-header: linear-gradient(145deg, rgba(255, 255, 255, 0.92), rgba(238, 246, 255, 0.86));
-  --gradient-footer: linear-gradient(145deg, rgba(255, 255, 255, 0.95), rgba(234, 244, 255, 0.87));
-  --shadow-light: 0 4px 16px rgba(20, 39, 60, 0.08);
-  --shadow-medium: 0 9px 24px rgba(20, 39, 60, 0.14);
-  --shadow-heavy: 0 16px 36px rgba(20, 39, 60, 0.19);
-  --shadow-card: 0 7px 16px rgba(20, 39, 60, 0.1);
-  --shadow-card-hover: 0 12px 28px rgba(20, 39, 60, 0.16);
+  --background-color: #f3f1ea;
+  --background-gradient: radial-gradient(1100px 800px at 10% 12%, rgba(68, 125, 160, 0.16), transparent 58%), radial-gradient(900px 700px at 92% 8%, rgba(204, 144, 72, 0.2), transparent 58%), linear-gradient(160deg, #f6f2e9 0%, #f8f5ee 45%, #eef3f7 100%);
+  --card-bg: linear-gradient(165deg, rgba(255, 255, 255, 0.95), rgba(250, 247, 241, 0.85));
+  --card-border: rgba(40, 62, 82, 0.18);
+  --accent-color: #1f6f8b;
+  --accent-secondary: #b47e2f;
+  --accent-tertiary: #2e8b6e;
+  --text-color: #1b2a36;
+  --muted-color: #51616f;
+  --gradient-header: linear-gradient(145deg, rgba(255, 255, 255, 0.94), rgba(244, 239, 231, 0.9));
+  --gradient-footer: linear-gradient(145deg, rgba(255, 255, 255, 0.96), rgba(240, 236, 229, 0.9));
+  --shadow-light: 0 4px 16px rgba(36, 46, 56, 0.08);
+  --shadow-medium: 0 9px 24px rgba(36, 46, 56, 0.14);
+  --shadow-heavy: 0 16px 36px rgba(36, 46, 56, 0.2);
+  --shadow-card: 0 7px 16px rgba(36, 46, 56, 0.12);
+  --shadow-card-hover: 0 12px 30px rgba(36, 46, 56, 0.18);
+
+  --next-prayer-badge-bg: linear-gradient(135deg, rgba(58, 125, 160, 0.98), rgba(38, 108, 145, 0.92));
+  --next-prayer-badge-text: #f7fafc;
+  --next-event-bg: linear-gradient(135deg, rgba(233, 241, 247, 0.95), rgba(220, 231, 240, 0.9));
+  --next-event-border: 1px solid rgba(31, 52, 70, 0.16);
+  --next-event-text: #1b2a36;
+  --next-event-badge-bg: linear-gradient(135deg, rgba(58, 125, 160, 0.98), rgba(38, 108, 145, 0.92));
+  --next-event-badge-text: #f7fafc;
+  --next-card-bg: linear-gradient(150deg, rgba(28, 46, 63, 0.96), rgba(18, 30, 44, 0.94));
+  --next-card-border: rgba(58, 125, 160, 0.9);
+  --next-card-text: #f7fafc;
+  --next-card-muted: rgba(247, 250, 252, 0.72);
+
+  --panel-overlay: rgba(236, 233, 225, 0.75);
+  --panel-bg: linear-gradient(160deg, rgba(255, 255, 255, 0.98), rgba(246, 242, 235, 0.96));
+  --panel-text: #1b2a36;
+  --panel-muted: rgba(27, 42, 54, 0.78);
+  --panel-surface: rgba(27, 42, 54, 0.06);
+  --panel-border: rgba(27, 42, 54, 0.12);
+  --panel-input-bg: rgba(255, 255, 255, 0.92);
+  --panel-input-text: #1b2a36;
+  --panel-select-bg: #fffdf8;
+  --panel-tab-bg: linear-gradient(145deg, rgba(250, 246, 239, 0.95), rgba(242, 237, 230, 0.9));
+  --panel-tab-text: #1f3446;
+  --panel-tab-active-bg: linear-gradient(135deg, rgba(58, 125, 160, 0.98), rgba(38, 108, 145, 0.92));
+  --panel-tab-active-text: #f7fafc;
+  --panel-heading-bg: linear-gradient(120deg, rgba(58, 98, 130, 0.16), rgba(38, 72, 100, 0.08));
+  --panel-heading-text: #1f3446;
+  --panel-sticky-bg: linear-gradient(180deg, rgba(255, 255, 255, 0) 0%, rgba(247, 244, 238, 0.96) 55%, rgba(244, 239, 231, 0.98) 100%);
+  --table-head-bg: rgba(238, 233, 226, 0.95);
 }
 
 [data-theme="high-contrast"] {
@@ -91,6 +151,43 @@
   --text-color: #fff;
   --muted-color: #fff;
   --next-border-width: 4px;
+  --gradient-header: linear-gradient(180deg, #000, #000);
+  --gradient-footer: linear-gradient(180deg, #000, #000);
+  --shadow-light: none;
+  --shadow-medium: none;
+  --shadow-heavy: none;
+  --shadow-card: none;
+  --shadow-card-hover: none;
+
+  --next-prayer-badge-bg: #ffe600;
+  --next-prayer-badge-text: #000;
+  --next-event-bg: #000;
+  --next-event-border: 2px solid #fff;
+  --next-event-text: #fff;
+  --next-event-badge-bg: #ffe600;
+  --next-event-badge-text: #000;
+  --next-card-bg: #000;
+  --next-card-border: #fff;
+  --next-card-text: #fff;
+  --next-card-muted: #fff;
+
+  --panel-overlay: rgba(0, 0, 0, 0.95);
+  --panel-bg: linear-gradient(180deg, #000, #000);
+  --panel-text: #fff;
+  --panel-muted: #fff;
+  --panel-surface: #000;
+  --panel-border: #fff;
+  --panel-input-bg: #000;
+  --panel-input-text: #fff;
+  --panel-select-bg: #000;
+  --panel-tab-bg: #000;
+  --panel-tab-text: #fff;
+  --panel-tab-active-bg: #fff;
+  --panel-tab-active-text: #000;
+  --panel-heading-bg: #000;
+  --panel-heading-text: #fff;
+  --panel-sticky-bg: linear-gradient(180deg, rgba(0, 0, 0, 0) 0%, #000 55%, #000 100%);
+  --table-head-bg: #000;
 }
 
 * {
@@ -103,6 +200,19 @@ select:focus,
 textarea:focus {
   outline: var(--focus-outline);
   outline-offset: var(--focus-outline-offset);
+}
+
+button {
+  font-family: inherit;
+  letter-spacing: 0.01em;
+  -webkit-tap-highlight-color: transparent;
+}
+
+button:disabled,
+button[disabled] {
+  opacity: 0.6;
+  cursor: not-allowed;
+  filter: grayscale(0.2);
 }
 
 .skip-link {
@@ -307,22 +417,27 @@ header {
 #font-controls button {
   border: 1px solid rgba(255, 255, 255, 0.22);
   color: var(--text-color);
-  background: rgba(255, 255, 255, 0.08);
+  background: linear-gradient(155deg, rgba(255, 255, 255, 0.16), rgba(255, 255, 255, 0.04));
   box-shadow: var(--shadow-light);
   transition: var(--theme-transition);
+  backdrop-filter: blur(6px);
 }
 
 #admin-btn {
   margin-top: 0.2rem;
-  padding: 0.24rem 0.55rem;
-  border-radius: 0.35rem;
+  padding: 0.32rem 0.72rem;
+  border-radius: 999px;
   font-size: 0.78rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
   cursor: pointer;
 }
 
 #admin-btn:hover {
   border-color: var(--accent-color);
   color: var(--accent-color);
+  box-shadow: var(--shadow-medium);
 }
 
 #settings-toggle {
@@ -387,8 +502,9 @@ header {
 #font-controls button {
   width: 31px;
   height: 31px;
-  border-radius: 0.4rem;
+  border-radius: 0.55rem;
   font-size: 0.86rem;
+  font-weight: 700;
   cursor: pointer;
 }
 
@@ -474,12 +590,21 @@ textarea {
 }
 
 .prayer-card.next {
-  border-color: rgba(255, 206, 123, 0.75);
-  background: linear-gradient(150deg, rgba(34, 24, 6, 0.92), rgba(14, 22, 34, 0.9));
+  border-color: var(--next-card-border);
+  background: var(--next-card-bg);
   box-shadow: 0 0 0 1px rgba(255, 206, 123, 0.55),
     0 0 26px rgba(255, 188, 92, 0.26),
     0 0 40px rgba(96, 210, 255, 0.2);
   animation: next-glow 2.2s ease-in-out infinite;
+}
+
+.prayer-card.next .prayer-name,
+.prayer-card.next .prayer-time {
+  color: var(--next-card-text);
+}
+
+.prayer-card.next .prayer-iqamah {
+  color: var(--next-card-muted);
 }
 
 @keyframes next-glow {
@@ -501,8 +626,8 @@ textarea {
   text-transform: uppercase;
   padding: 0.2rem 0.55rem;
   border-radius: 999px;
-  background: linear-gradient(135deg, rgba(95, 210, 255, 0.95), rgba(84, 155, 255, 0.92));
-  color: #06111d;
+  background: var(--next-prayer-badge-bg);
+  color: var(--next-prayer-badge-text);
   box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.08);
   margin-bottom: 0.35rem;
 }
@@ -591,15 +716,15 @@ footer {
 #next-event {
   font-size: var(--next-event-size);
   font-weight: 700;
-  color: var(--text-color);
+  color: var(--next-event-text);
   white-space: nowrap;
   display: inline-flex;
   align-items: center;
   gap: 0.55rem;
   padding: 0.35rem 0.7rem;
   border-radius: 999px;
-  background: linear-gradient(135deg, rgba(12, 30, 46, 0.85), rgba(8, 18, 30, 0.9));
-  border: 1px solid rgba(255, 255, 255, 0.12);
+  background: var(--next-event-bg);
+  border: var(--next-event-border);
   box-shadow: 0 6px 18px rgba(0, 0, 0, 0.22);
 }
 
@@ -609,13 +734,13 @@ footer {
   text-transform: uppercase;
   padding: 0.2rem 0.55rem;
   border-radius: 999px;
-  background: linear-gradient(135deg, rgba(255, 212, 140, 0.95), rgba(217, 179, 111, 0.92));
-  color: #1c1608;
+  background: var(--next-event-badge-bg);
+  color: var(--next-event-badge-text);
   box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.08);
 }
 
 .next-event-text {
-  color: var(--text-color);
+  color: var(--next-event-text);
   letter-spacing: 0.02em;
 }
 
@@ -666,8 +791,8 @@ footer {
 #admin-panel {
   position: fixed;
   inset: 0;
-  background: rgba(3, 8, 14, 0.78);
-  color: #fff;
+  background: var(--panel-overlay);
+  color: var(--panel-text);
   display: none;
   flex-direction: column;
   z-index: 2000;
@@ -687,8 +812,8 @@ footer {
   overflow-y: auto;
   padding: 1.05rem;
   border-radius: 0.8rem;
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  background: linear-gradient(160deg, rgba(10, 24, 38, 0.98), rgba(8, 18, 30, 0.96));
+  border: 1px solid var(--panel-border);
+  background: var(--panel-bg);
   box-shadow: var(--shadow-heavy);
   direction: ltr !important;
   text-align: left !important;
@@ -702,8 +827,8 @@ footer {
   gap: 0.45rem;
   padding: 0.4rem 0.2rem;
   border-radius: 0.7rem;
-  background: rgba(255, 255, 255, 0.04);
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: var(--panel-surface);
+  border: 1px solid var(--panel-border);
   position: sticky;
   top: 0;
   z-index: 1;
@@ -711,28 +836,30 @@ footer {
 }
 
 .admin-tab {
-  border: 1px solid rgba(255, 255, 255, 0.12);
-  background: rgba(6, 16, 28, 0.75);
-  color: #cfe7ff;
-  padding: 0.32rem 0.7rem;
+  border: 1px solid var(--panel-border);
+  background: var(--panel-tab-bg);
+  color: var(--panel-tab-text);
+  padding: 0.35rem 0.85rem;
   border-radius: 999px;
-  font-size: 0.8rem;
-  letter-spacing: 0.04em;
+  font-size: 0.78rem;
+  letter-spacing: 0.06em;
   text-transform: uppercase;
   cursor: pointer;
   transition: var(--theme-transition);
+  box-shadow: 0 6px 14px rgba(0, 0, 0, 0.18);
 }
 
 .admin-tab:hover {
-  border-color: rgba(110, 197, 255, 0.5);
-  color: #fff;
+  border-color: rgba(110, 197, 255, 0.6);
+  color: var(--text-color);
+  transform: translateY(-1px);
 }
 
 .admin-tab.active {
-  background: linear-gradient(135deg, rgba(95, 210, 255, 0.95), rgba(84, 155, 255, 0.92));
-  color: #06111d;
+  background: var(--panel-tab-active-bg);
+  color: var(--panel-tab-active-text);
   border-color: transparent;
-  box-shadow: 0 8px 18px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.25);
 }
 
 .admin-section {
@@ -754,11 +881,11 @@ footer {
   font-size: 0.98rem;
   letter-spacing: 0.08em;
   text-transform: uppercase;
-  color: #cfe7ff;
+  color: var(--panel-heading-text);
   padding: 0.35rem 0.6rem;
   border-radius: 0.55rem;
-  background: linear-gradient(120deg, rgba(22, 54, 84, 0.8), rgba(12, 28, 44, 0.6));
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: var(--panel-heading-bg);
+  border: 1px solid var(--panel-border);
 }
 
 .admin-row {
@@ -768,8 +895,8 @@ footer {
   margin: 0;
   padding: 0.7rem 0.8rem;
   border-radius: 0.65rem;
-  background: rgba(255, 255, 255, 0.04);
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: var(--panel-surface);
+  border: 1px solid var(--panel-border);
 }
 
 .admin-row label,
@@ -780,7 +907,7 @@ footer {
   gap: 0.2rem;
   font-size: 0.88rem;
   font-weight: 600;
-  color: rgba(255, 255, 255, 0.85);
+  color: var(--panel-muted);
 }
 
 .admin-row input[type="text"],
@@ -790,17 +917,17 @@ footer {
 .admin-row textarea {
   padding: 0.52rem 0.6rem;
   font-size: 0.94rem;
-  border: 1px solid rgba(255, 255, 255, 0.18);
+  border: 1px solid var(--panel-border);
   border-radius: 0.5rem;
-  background: rgba(6, 16, 28, 0.72);
-  color: #f2f7ff;
+  background: var(--panel-input-bg);
+  color: var(--panel-input-text);
   box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.02);
 }
 
 #admin-panel select,
 #admin-panel select option {
-  background: #0b1e30;
-  color: #fff;
+  background: var(--panel-select-bg);
+  color: var(--panel-input-text);
 }
 
 .admin-row textarea {
@@ -826,7 +953,7 @@ footer {
   position: sticky;
   bottom: 0;
   padding: 0.6rem 0.4rem 0.9rem;
-  background: linear-gradient(180deg, rgba(10, 24, 38, 0) 0%, rgba(10, 24, 38, 0.95) 50%, rgba(10, 24, 38, 0.98) 100%);
+  background: var(--panel-sticky-bg);
   z-index: 2;
 }
 
@@ -840,31 +967,35 @@ footer {
 }
 
 .admin-row button {
-  border: 0;
-  border-radius: 0.4rem;
-  padding: 0.48rem 0.85rem;
+  border: 1px solid var(--panel-border);
+  border-radius: 0.6rem;
+  padding: 0.55rem 1.05rem;
   cursor: pointer;
   font-size: 0.9rem;
-  background: #334155;
-  color: #fff;
+  font-weight: 700;
+  background: linear-gradient(135deg, rgba(70, 90, 120, 0.9), rgba(45, 63, 92, 0.95));
+  color: var(--panel-text);
+  box-shadow: 0 8px 18px rgba(0, 0, 0, 0.2);
+  transition: var(--theme-transition);
 }
 
 .admin-row button:hover {
-  filter: brightness(1.05);
+  transform: translateY(-1px);
+  box-shadow: 0 10px 22px rgba(0, 0, 0, 0.25);
 }
 
 button.save {
-  background: var(--accent-color);
+  background: linear-gradient(135deg, rgba(110, 197, 255, 0.98), rgba(78, 160, 255, 0.95));
   color: #04101b;
 }
 
 button.cancel {
-  background: #5b6370;
+  background: linear-gradient(135deg, rgba(120, 130, 145, 0.9), rgba(90, 98, 112, 0.95));
   color: #fff;
 }
 
 button.reset {
-  background: #9d3030;
+  background: linear-gradient(135deg, rgba(220, 90, 90, 0.95), rgba(150, 40, 40, 0.95));
   color: #fff;
 }
 
@@ -896,7 +1027,7 @@ button.reset {
   position: sticky;
   top: 0;
   z-index: 1;
-  background: rgba(8, 20, 32, 0.95);
+  background: var(--table-head-bg);
   color: var(--accent-color);
 }
 
